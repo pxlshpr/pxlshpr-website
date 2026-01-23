@@ -1,13 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
   <defs>
-    <!-- Gradient for the main shape -->
     <linearGradient id="mainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:#c084fc"/>
       <stop offset="50%" style="stop-color:#f472b6"/>
       <stop offset="100%" style="stop-color:#2dd4bf"/>
     </linearGradient>
-
-    <!-- Glow effect -->
     <filter id="glow">
       <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
       <feMerge>
@@ -20,31 +17,22 @@
   <!-- Background circle -->
   <circle cx="100" cy="100" r="95" fill="#0a0a0f"/>
 
-  <!-- Pixel grid pattern - representing "pixel" -->
-  <!-- Row 1 -->
+  <!-- Pixel grid -->
   <rect x="45" y="50" width="22" height="22" rx="4" fill="#c084fc" opacity="0.9"/>
   <rect x="72" y="50" width="22" height="22" rx="4" fill="#f472b6" opacity="0.9"/>
   <rect x="99" y="50" width="22" height="22" rx="4" fill="#fb923c" opacity="0.9"/>
-
-  <!-- Row 2 -->
   <rect x="45" y="77" width="22" height="22" rx="4" fill="#f472b6" opacity="0.9"/>
   <rect x="72" y="77" width="22" height="22" rx="4" fill="#2dd4bf" opacity="0.9"/>
   <rect x="99" y="77" width="22" height="22" rx="4" fill="#c084fc" opacity="0.9"/>
   <rect x="126" y="77" width="22" height="22" rx="4" fill="#f472b6" opacity="0.8"/>
-
-  <!-- Row 3 -->
   <rect x="72" y="104" width="22" height="22" rx="4" fill="#fb923c" opacity="0.9"/>
   <rect x="99" y="104" width="22" height="22" rx="4" fill="#f472b6" opacity="0.9"/>
   <rect x="126" y="104" width="22" height="22" rx="4" fill="#2dd4bf" opacity="0.9"/>
 
-  <!-- Shipping arrow / cursor pointing right-down (representing "shipper") -->
-  <polygon
-    points="110,115 155,140 140,145 150,165 138,168 128,150 120,158"
-    fill="url(#mainGradient)"
-    filter="url(#glow)"
-  />
+  <!-- Fixed cursor with straight edges -->
+  <path d="M115 118 L152 148 L142 152 L148 172 L138 175 L132 155 L122 162 Z" fill="url(#mainGradient)" filter="url(#glow)"/>
 
-  <!-- Small sparkle accents -->
+  <!-- Sparkles -->
   <circle cx="150" cy="55" r="4" fill="#fbbf24" opacity="0.9"/>
   <circle cx="160" cy="70" r="2.5" fill="#2dd4bf" opacity="0.8"/>
   <circle cx="55" cy="130" r="3" fill="#f472b6" opacity="0.7"/>

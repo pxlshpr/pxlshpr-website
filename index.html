@@ -23,10 +23,6 @@
             --accent-pink: #f472b6;
             --accent-teal: #2dd4bf;
             --accent-gold: #d4a944;
-            --nutrikit-purple: #5D00FF;
-            --nutrikit-light: #A164FF;
-            --chunes-pink: #f472b6;
-            --chunes-purple: #c084fc;
         }
 
         body {
@@ -124,11 +120,67 @@
             }
         }
 
-        .profile-image-container {
+        /* 3D Profile Container */
+        .profile-3d-container {
+            perspective: 800px;
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 28px;
             position: relative;
+        }
+
+        .profile-3d-scene {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: profile3DRotate 12s ease-in-out infinite;
+        }
+
+        @keyframes profile3DRotate {
+            0% { transform: rotateY(0deg) rotateX(0deg); }
+            15% { transform: rotateY(25deg) rotateX(10deg); }
+            30% { transform: rotateY(-15deg) rotateX(-8deg); }
+            45% { transform: rotateY(20deg) rotateX(-12deg); }
+            60% { transform: rotateY(-25deg) rotateX(15deg); }
+            75% { transform: rotateY(10deg) rotateX(-5deg); }
+            90% { transform: rotateY(-10deg) rotateX(8deg); }
+            100% { transform: rotateY(0deg) rotateX(0deg); }
+        }
+
+        /* Logo - Behind the profile */
+        .logo-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: visible;
+            transform: translateZ(-2px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-back svg {
             width: 160px;
             height: 160px;
-            margin: 0 auto 24px;
+            filter: drop-shadow(0 0 30px rgba(192, 132, 252, 0.4));
+        }
+
+        /* Profile image - Front */
+        .profile-front {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: visible;
+            transform: translateZ(2px);
+        }
+
+        .profile-image-wrapper {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: relative;
+            overflow: visible;
         }
 
         .profile-image-ring {
@@ -151,12 +203,38 @@
             border-radius: 50%;
             object-fit: cover;
             border: 4px solid var(--bg-primary);
-            animation: profileBounce 3s ease-in-out infinite;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
         }
 
-        @keyframes profileBounce {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
+        /* Pixel animations */
+        .pixel-pulse {
+            animation: pixelPulse 2.5s ease-in-out infinite;
+        }
+        .pixel-pulse:nth-of-type(2) { animation-delay: 0.1s; }
+        .pixel-pulse:nth-of-type(3) { animation-delay: 0.2s; }
+        .pixel-pulse:nth-of-type(4) { animation-delay: 0.15s; }
+        .pixel-pulse:nth-of-type(5) { animation-delay: 0.25s; }
+        .pixel-pulse:nth-of-type(6) { animation-delay: 0.3s; }
+        .pixel-pulse:nth-of-type(7) { animation-delay: 0.35s; }
+        .pixel-pulse:nth-of-type(8) { animation-delay: 0.2s; }
+        .pixel-pulse:nth-of-type(9) { animation-delay: 0.4s; }
+        .pixel-pulse:nth-of-type(10) { animation-delay: 0.45s; }
+
+        @keyframes pixelPulse {
+            0%, 100% { opacity: 0.85; }
+            50% { opacity: 1; }
+        }
+
+        .cursor-animate {
+            animation: cursorMove 3s ease-in-out infinite;
+            transform-origin: 115px 120px;
+        }
+
+        @keyframes cursorMove {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(3px, 2px) rotate(2deg); }
+            50% { transform: translate(0, 4px) rotate(-1deg); }
+            75% { transform: translate(-2px, 1px) rotate(1deg); }
         }
 
         .username {
@@ -318,7 +396,7 @@
 
         /* NutriKit Card */
         .app-card.nutrikit {
-            --card-accent: var(--nutrikit-light);
+            --card-accent: #A164FF;
             background: linear-gradient(145deg, rgba(93, 0, 255, 0.15), rgba(45, 212, 191, 0.1));
             box-shadow: 0 8px 32px rgba(93, 0, 255, 0.2);
         }
@@ -329,7 +407,7 @@
 
         /* Chunes Card */
         .app-card.chunes {
-            --card-accent: var(--chunes-pink);
+            --card-accent: #f472b6;
             background: linear-gradient(145deg, rgba(192, 132, 252, 0.15), rgba(244, 114, 182, 0.1));
             box-shadow: 0 8px 32px rgba(192, 132, 252, 0.2);
         }
@@ -364,14 +442,14 @@
         }
 
         .nutrikit .app-name {
-            background: linear-gradient(135deg, var(--nutrikit-light), var(--accent-teal));
+            background: linear-gradient(135deg, #A164FF, var(--accent-teal));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
         .chunes .app-name {
-            background: linear-gradient(135deg, var(--chunes-purple), var(--chunes-pink));
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -397,24 +475,24 @@
 
         .nutrikit .app-cta {
             background: rgba(93, 0, 255, 0.2);
-            color: var(--nutrikit-light);
+            color: #A164FF;
             border: 1px solid rgba(93, 0, 255, 0.3);
         }
 
         .nutrikit:hover .app-cta {
             background: rgba(93, 0, 255, 0.4);
-            border-color: var(--nutrikit-light);
+            border-color: #A164FF;
         }
 
         .chunes .app-cta {
             background: rgba(244, 114, 182, 0.2);
-            color: var(--chunes-pink);
+            color: var(--accent-pink);
             border: 1px solid rgba(244, 114, 182, 0.3);
         }
 
         .chunes:hover .app-cta {
             background: rgba(244, 114, 182, 0.4);
-            border-color: var(--chunes-pink);
+            border-color: var(--accent-pink);
         }
 
         /* Footer */
@@ -442,77 +520,6 @@
             40% { transform: scale(1); }
             60% { transform: scale(1.1); }
         }
-
-        /* Logo Section */
-        .logo-container {
-            perspective: 1000px;
-            margin-bottom: 40px;
-        }
-
-        .logo-3d {
-            width: 140px;
-            height: 140px;
-            transform-style: preserve-3d;
-            animation: logoFloat 6s ease-in-out infinite, logoRotate 20s linear infinite;
-            cursor: pointer;
-            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .logo-3d:hover {
-            animation-play-state: paused;
-            transform: rotateY(180deg) rotateX(20deg) scale(1.2);
-        }
-
-        @keyframes logoFloat {
-            0%, 100% { transform: translateY(0) rotateX(0deg) rotateY(0deg); }
-            25% { transform: translateY(-15px) rotateX(5deg) rotateY(10deg); }
-            50% { transform: translateY(0) rotateX(0deg) rotateY(0deg); }
-            75% { transform: translateY(-10px) rotateX(-5deg) rotateY(-10deg); }
-        }
-
-        @keyframes logoRotate {
-            from { transform: rotateY(0deg); }
-            to { transform: rotateY(360deg); }
-        }
-
-        .logo-3d svg {
-            width: 100%;
-            height: 100%;
-            filter: drop-shadow(0 20px 40px rgba(192, 132, 252, 0.3));
-        }
-
-        .logo-3d:hover svg {
-            filter: drop-shadow(0 30px 60px rgba(244, 114, 182, 0.5));
-        }
-
-        /* Pixel animation classes */
-        .pixel-animate {
-            animation: pixelPulse 3s ease-in-out infinite;
-        }
-
-        .pixel-animate:nth-child(2) { animation-delay: 0.1s; }
-        .pixel-animate:nth-child(3) { animation-delay: 0.2s; }
-        .pixel-animate:nth-child(4) { animation-delay: 0.15s; }
-        .pixel-animate:nth-child(5) { animation-delay: 0.25s; }
-        .pixel-animate:nth-child(6) { animation-delay: 0.3s; }
-        .pixel-animate:nth-child(7) { animation-delay: 0.35s; }
-        .pixel-animate:nth-child(8) { animation-delay: 0.2s; }
-        .pixel-animate:nth-child(9) { animation-delay: 0.4s; }
-        .pixel-animate:nth-child(10) { animation-delay: 0.45s; }
-
-        @keyframes pixelPulse {
-            0%, 100% { opacity: 0.9; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.05); }
-        }
-
-        .cursor-animate {
-            animation: cursorBounce 2s ease-in-out infinite;
-        }
-
-        @keyframes cursorBounce {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(5px, 5px); }
-        }
     </style>
 </head>
 <body>
@@ -522,46 +529,57 @@
 
     <div class="container">
         <section class="profile">
-            <!-- Animated Logo -->
-            <div class="logo-container">
-                <div class="logo-3d">
-                    <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <linearGradient id="cursorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#c084fc"/>
-                                <stop offset="50%" stop-color="#f472b6"/>
-                                <stop offset="100%" stop-color="#2dd4bf"/>
-                            </linearGradient>
-                            <filter id="glow">
-                                <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
-                                <feMerge>
-                                    <feMergeNode in="coloredBlur"/>
-                                    <feMergeNode in="SourceGraphic"/>
-                                </feMerge>
-                            </filter>
-                        </defs>
-                        <circle cx="100" cy="100" r="95" fill="#0a0a0f"/>
-                        <rect class="pixel-animate" x="45" y="50" width="22" height="22" rx="4" fill="#c084fc"/>
-                        <rect class="pixel-animate" x="72" y="50" width="22" height="22" rx="4" fill="#f472b6"/>
-                        <rect class="pixel-animate" x="99" y="50" width="22" height="22" rx="4" fill="#fb923c"/>
-                        <rect class="pixel-animate" x="45" y="77" width="22" height="22" rx="4" fill="#f472b6"/>
-                        <rect class="pixel-animate" x="72" y="77" width="22" height="22" rx="4" fill="#2dd4bf"/>
-                        <rect class="pixel-animate" x="99" y="77" width="22" height="22" rx="4" fill="#c084fc"/>
-                        <rect class="pixel-animate" x="126" y="77" width="22" height="22" rx="4" fill="#f472b6" opacity="0.8"/>
-                        <rect class="pixel-animate" x="72" y="104" width="22" height="22" rx="4" fill="#fb923c"/>
-                        <rect class="pixel-animate" x="99" y="104" width="22" height="22" rx="4" fill="#f472b6"/>
-                        <rect class="pixel-animate" x="126" y="104" width="22" height="22" rx="4" fill="#2dd4bf"/>
-                        <polygon class="cursor-animate" points="110,115 155,140 140,145 150,165 138,168 128,150 120,158" fill="url(#cursorGrad)" filter="url(#glow)"/>
-                        <circle cx="150" cy="55" r="4" fill="#fbbf24" opacity="0.9"/>
-                        <circle cx="160" cy="70" r="2.5" fill="#2dd4bf" opacity="0.8"/>
-                        <circle cx="55" cy="130" r="3" fill="#f472b6" opacity="0.7"/>
-                    </svg>
-                </div>
-            </div>
+            <!-- 3D Profile with Logo Behind -->
+            <div class="profile-3d-container">
+                <div class="profile-3d-scene">
+                    <!-- Logo behind -->
+                    <div class="logo-back">
+                        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="cursorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#c084fc"/>
+                                    <stop offset="50%" stop-color="#f472b6"/>
+                                    <stop offset="100%" stop-color="#2dd4bf"/>
+                                </linearGradient>
+                                <filter id="glow">
+                                    <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                                    <feMerge>
+                                        <feMergeNode in="coloredBlur"/>
+                                        <feMergeNode in="SourceGraphic"/>
+                                    </feMerge>
+                                </filter>
+                            </defs>
+                            <circle cx="100" cy="100" r="95" fill="#0a0a0f"/>
+                            <!-- Pixel grid -->
+                            <rect class="pixel-pulse" x="45" y="50" width="22" height="22" rx="4" fill="#c084fc"/>
+                            <rect class="pixel-pulse" x="72" y="50" width="22" height="22" rx="4" fill="#f472b6"/>
+                            <rect class="pixel-pulse" x="99" y="50" width="22" height="22" rx="4" fill="#fb923c"/>
+                            <rect class="pixel-pulse" x="45" y="77" width="22" height="22" rx="4" fill="#f472b6"/>
+                            <rect class="pixel-pulse" x="72" y="77" width="22" height="22" rx="4" fill="#2dd4bf"/>
+                            <rect class="pixel-pulse" x="99" y="77" width="22" height="22" rx="4" fill="#c084fc"/>
+                            <rect class="pixel-pulse" x="126" y="77" width="22" height="22" rx="4" fill="#f472b6" opacity="0.8"/>
+                            <rect class="pixel-pulse" x="72" y="104" width="22" height="22" rx="4" fill="#fb923c"/>
+                            <rect class="pixel-pulse" x="99" y="104" width="22" height="22" rx="4" fill="#f472b6"/>
+                            <rect class="pixel-pulse" x="126" y="104" width="22" height="22" rx="4" fill="#2dd4bf"/>
+                            <!-- Fixed cursor with straight edges -->
+                            <g class="cursor-animate" filter="url(#glow)">
+                                <path d="M115 118 L152 148 L142 152 L148 172 L138 175 L132 155 L122 162 Z" fill="url(#cursorGrad)"/>
+                            </g>
+                            <!-- Sparkles -->
+                            <circle cx="150" cy="55" r="4" fill="#fbbf24" opacity="0.9"/>
+                            <circle cx="160" cy="70" r="2.5" fill="#2dd4bf" opacity="0.8"/>
+                            <circle cx="55" cy="130" r="3" fill="#f472b6" opacity="0.7"/>
+                        </svg>
+                    </div>
 
-            <div class="profile-image-container">
-                <div class="profile-image-ring"></div>
-                <img src="profile.jpg" alt="Ahmed Ragheb Khalaf" class="profile-image">
+                    <!-- Profile image front -->
+                    <div class="profile-front">
+                        <div class="profile-image-wrapper">
+                            <div class="profile-image-ring"></div>
+                            <img src="profile.jpg" alt="Ahmed Ragheb Khalaf" class="profile-image">
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <h1 class="username">pxlshpr</h1>
