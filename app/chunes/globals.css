@@ -1,0 +1,564 @@
+@import "tailwindcss";
+
+/* ============================================
+   CHUNES DESIGN SYSTEM
+   Vibrant gradients matching the iOS app
+   ============================================ */
+
+@layer base {
+  :root {
+    /* Dark mode default - matching app aesthetic */
+    --background: #0a0a0f;
+    --background-secondary: #12121a;
+    --foreground: #ffffff;
+    --foreground-secondary: #a0a0b0;
+    --foreground-tertiary: #606070;
+
+    /* Cards - glass effect */
+    --card-bg: rgba(25, 25, 35, 0.8);
+    --card-border: rgba(255, 255, 255, 0.08);
+
+    /* Accent Colors - from the app */
+    --accent-primary: #c084fc;      /* Purple - genres */
+    --accent-secondary: #f472b6;    /* Pink - moods */
+    --accent-tertiary: #fb923c;     /* Orange - activities */
+    --accent-gold: #fbbf24;         /* Gold - instruments */
+    --accent-teal: #2dd4bf;         /* Teal - misc */
+
+    /* Gradient stops */
+    --gradient-start: #1a1a2e;
+    --gradient-mid: #16213e;
+    --gradient-end: #0f0f1a;
+
+    /* Button gradient */
+    --button-gradient: linear-gradient(135deg, #f472b6 0%, #c084fc 50%, #818cf8 100%);
+
+    /* Borders */
+    --border-default: rgba(255, 255, 255, 0.1);
+
+    /* Radius */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --radius-2xl: 24px;
+    --radius-full: 9999px;
+
+    /* Font */
+    --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
+
+    /* iPhone frame colors - Dark Titanium (dark mode default) */
+    --iphone-frame-light: #4a4a4c;
+    --iphone-frame-mid: #3a3a3c;
+    --iphone-frame-dark: #2a2a2c;
+    --iphone-inner-light: #3a3a3c;
+    --iphone-inner-dark: #2a2a2c;
+    --iphone-button-light: #4a4a4c;
+    --iphone-button-mid: #3a3a3c;
+    --iphone-button-dark: #2a2a2c;
+  }
+
+  /* Light mode */
+  @media (prefers-color-scheme: light) {
+    :root {
+      --background: #faf9f7;
+      --background-secondary: #ffffff;
+      --foreground: #1a1a2e;
+      --foreground-secondary: #4a4a5a;
+      --foreground-tertiary: #8a8a9a;
+
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --card-border: rgba(0, 0, 0, 0.08);
+
+      --border-default: rgba(0, 0, 0, 0.1);
+
+      --gradient-start: #faf9f7;
+      --gradient-mid: #f0eff5;
+      --gradient-end: #e8e7f0;
+
+      /* iPhone frame colors - Natural Titanium (light mode) */
+      --iphone-frame-light: #8a8a8c;
+      --iphone-frame-mid: #78787a;
+      --iphone-frame-dark: #6a6a6c;
+      --iphone-inner-light: #6a6a6c;
+      --iphone-inner-dark: #5a5a5c;
+      --iphone-button-light: #7a7a7c;
+      --iphone-button-mid: #6a6a6c;
+      --iphone-button-dark: #5a5a5c;
+    }
+  }
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+@layer base {
+  * {
+    border-color: var(--border-default);
+  }
+
+  html, body {
+    overflow-x: hidden;
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  h1 {
+    font-size: 2.75rem;
+    line-height: 1.1;
+    font-weight: 800;
+  }
+
+  @media (min-width: 768px) {
+    h1 { font-size: 4rem; }
+  }
+
+  @media (min-width: 1024px) {
+    h1 { font-size: 5rem; }
+  }
+
+  h2 {
+    font-size: 2.25rem;
+    font-weight: 700;
+  }
+
+  @media (min-width: 768px) {
+    h2 { font-size: 3rem; }
+  }
+
+  h3 {
+    font-size: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    h3 { font-size: 1.875rem; }
+  }
+
+  ::selection {
+    background: var(--accent-primary);
+    color: #000;
+  }
+}
+
+/* ============================================
+   GRADIENT BACKGROUNDS
+   ============================================ */
+@layer utilities {
+  .bg-gradient-app {
+    background: linear-gradient(180deg,
+      var(--gradient-start) 0%,
+      var(--gradient-mid) 50%,
+      var(--gradient-end) 100%
+    );
+  }
+
+  .bg-gradient-radial {
+    background: radial-gradient(ellipse at top, rgba(192, 132, 252, 0.15) 0%, transparent 50%);
+  }
+
+  .bg-gradient-hero {
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(192, 132, 252, 0.2) 0%, transparent 40%),
+      radial-gradient(ellipse at 70% 60%, rgba(244, 114, 182, 0.15) 0%, transparent 40%),
+      radial-gradient(ellipse at 50% 80%, rgba(251, 146, 60, 0.1) 0%, transparent 40%);
+  }
+}
+
+/* ============================================
+   GLASS CARDS
+   ============================================ */
+@layer utilities {
+  .glass {
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--card-border);
+  }
+
+  .card {
+    background: var(--card-bg);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .card-interactive {
+    background: var(--card-bg);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(12px);
+    transition: all 0.2s ease;
+  }
+
+  .card-interactive:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent-primary);
+    box-shadow: 0 8px 32px rgba(192, 132, 252, 0.15);
+  }
+}
+
+/* ============================================
+   TAG PILLS (matching app)
+   ============================================ */
+@layer components {
+  .tag-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: var(--radius-full);
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.15s ease;
+  }
+
+  .tag-genre {
+    background: rgba(192, 132, 252, 0.2);
+    color: #c084fc;
+    border: 1px solid rgba(192, 132, 252, 0.3);
+  }
+
+  .tag-mood {
+    background: rgba(244, 114, 182, 0.2);
+    color: #f472b6;
+    border: 1px solid rgba(244, 114, 182, 0.3);
+  }
+
+  .tag-activity {
+    background: rgba(251, 146, 60, 0.2);
+    color: #fb923c;
+    border: 1px solid rgba(251, 146, 60, 0.3);
+  }
+
+  .tag-instrument {
+    background: rgba(251, 191, 36, 0.2);
+    color: #fbbf24;
+    border: 1px solid rgba(251, 191, 36, 0.3);
+  }
+
+  .tag-teal {
+    background: rgba(45, 212, 191, 0.2);
+    color: #2dd4bf;
+    border: 1px solid rgba(45, 212, 191, 0.3);
+  }
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 600;
+    border-radius: var(--radius-lg);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .btn-primary {
+    background: var(--button-gradient);
+    color: #000;
+    padding: 12px 24px;
+    font-weight: 600;
+    border-radius: var(--radius-xl);
+    box-shadow: 0 4px 20px rgba(244, 114, 182, 0.3);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 30px rgba(244, 114, 182, 0.4);
+  }
+
+  .btn-outline {
+    background: transparent;
+    border: 1.5px solid var(--border-default);
+    color: var(--foreground);
+    padding: 12px 24px;
+    font-weight: 600;
+    border-radius: var(--radius-xl);
+  }
+
+  .btn-outline:hover {
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+  }
+
+  .btn-lg {
+    padding: 16px 32px;
+    font-size: 1.0625rem;
+  }
+
+  .btn-sm {
+    padding: 8px 16px;
+    font-size: 0.875rem;
+  }
+
+  /* Portfolio link */
+  .portfolio-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.5;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .portfolio-link:hover {
+    opacity: 1;
+    transform: scale(1.15) rotate(-5deg);
+  }
+
+  .portfolio-link svg rect,
+  .portfolio-link svg polygon {
+    transform-box: fill-box;
+  }
+}
+
+/* ============================================
+   GRADIENT TEXT
+   ============================================ */
+@layer utilities {
+  .gradient-text {
+    background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 50%, var(--accent-tertiary) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .gradient-text-pink {
+    background: linear-gradient(135deg, #f472b6 0%, #c084fc 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+/* ============================================
+   PILLS & BADGES
+   ============================================ */
+@layer utilities {
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    border-radius: var(--radius-full);
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .pill-primary {
+    background: rgba(192, 132, 252, 0.15);
+    color: var(--accent-primary);
+    border: 1px solid rgba(192, 132, 252, 0.3);
+  }
+
+  .pill-pink {
+    background: rgba(244, 114, 182, 0.15);
+    color: var(--accent-secondary);
+    border: 1px solid rgba(244, 114, 182, 0.3);
+  }
+}
+
+/* ============================================
+   CONTAINER
+   ============================================ */
+@layer utilities {
+  .container-app {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .container-app {
+      padding: 0 2rem;
+    }
+  }
+
+  .section-padding {
+    padding: 5rem 0;
+  }
+
+  @media (min-width: 768px) {
+    .section-padding {
+      padding: 7rem 0;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .section-padding {
+      padding: 9rem 0;
+    }
+  }
+}
+
+/* ============================================
+   iPHONE FRAME
+   ============================================ */
+@layer components {
+  .iphone-device {
+    position: relative;
+  }
+
+  .iphone-outer-frame {
+    position: relative;
+    background: linear-gradient(to bottom, var(--iphone-frame-mid), var(--iphone-frame-light), var(--iphone-frame-dark));
+    border-radius: 54px;
+    padding: 3px;
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.15),
+      0 25px 80px -12px rgba(0, 0, 0, 0.5),
+      0 0 40px rgba(0, 0, 0, 0.3);
+  }
+
+  .iphone-inner-frame {
+    background: linear-gradient(to bottom, var(--iphone-inner-dark), var(--iphone-inner-light), var(--iphone-inner-dark));
+    border-radius: 51px;
+    padding: 2px;
+  }
+
+  .iphone-button {
+    position: absolute;
+    width: 4px;
+    background: linear-gradient(to bottom, var(--iphone-button-mid), var(--iphone-button-light), var(--iphone-button-dark));
+  }
+
+  .iphone-button-left {
+    left: -2.5px;
+    border-radius: 2px 0 0 2px;
+    box-shadow: -1px 0 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .iphone-button-right {
+    right: -2.5px;
+    border-radius: 0 2px 2px 0;
+    box-shadow: 1px 0 2px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* ============================================
+   VIDEO THEME SWITCHING
+   ============================================ */
+@layer utilities {
+  .video-light { display: none; }
+  .video-dark { display: block; }
+
+  @media (prefers-color-scheme: light) {
+    .video-light { display: block; }
+    .video-dark { display: none; }
+  }
+}
+
+/* ============================================
+   FEATURE ICONS
+   ============================================ */
+@layer components {
+  .feature-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .feature-icon-purple {
+    background: linear-gradient(135deg, #c084fc 0%, #a855f7 100%);
+    color: #000;
+  }
+
+  .feature-icon-pink {
+    background: linear-gradient(135deg, #f472b6 0%, #ec4899 100%);
+    color: #000;
+  }
+
+  .feature-icon-orange {
+    background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+    color: #000;
+  }
+
+  .feature-icon-gold {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    color: #000;
+  }
+
+  .feature-icon-teal {
+    background: linear-gradient(135deg, #2dd4bf 0%, #14b8a6 100%);
+    color: #000;
+  }
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@layer utilities {
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .animate-float {
+    animation: float 4s ease-in-out infinite;
+  }
+
+  @keyframes pulse-soft {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  .animate-pulse-soft {
+    animation: pulse-soft 2s ease-in-out infinite;
+  }
+}
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
+@layer base {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--foreground-tertiary);
+    border-radius: var(--radius-full);
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+@layer base {
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  *:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+  }
+}

@@ -1,0 +1,741 @@
+@import "tailwindcss";
+
+/* ============================================
+   PXLSHPR PORTFOLIO - Global Styles
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-primary: #0a0a0f;
+    --bg-secondary: #12121a;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0b0;
+    --accent-purple: #c084fc;
+    --accent-pink: #f472b6;
+    --accent-teal: #2dd4bf;
+    --accent-gold: #d4a944;
+}
+
+/* Beautiful Light Theme */
+@media (prefers-color-scheme: light) {
+    :root {
+        --bg-primary: #fafaf9;
+        --bg-secondary: #ffffff;
+        --text-primary: #1c1917;
+        --text-secondary: #57534e;
+        --accent-purple: #9333ea;
+        --accent-pink: #ec4899;
+        --accent-teal: #14b8a6;
+        --accent-gold: #b45309;
+    }
+}
+
+body {
+    font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Animated background gradient */
+.portfolio-bg-gradient {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+        radial-gradient(ellipse at 20% 20%, rgba(192, 132, 252, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(244, 114, 182, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(45, 212, 191, 0.05) 0%, transparent 50%);
+    animation: gradientShift 10s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@media (prefers-color-scheme: light) {
+    .portfolio-bg-gradient {
+        background:
+            radial-gradient(ellipse at 20% 20%, rgba(147, 51, 234, 0.08) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 80%, rgba(236, 72, 153, 0.06) 0%, transparent 50%),
+            radial-gradient(ellipse at 50% 50%, rgba(20, 184, 166, 0.04) 0%, transparent 50%);
+    }
+}
+
+@keyframes gradientShift {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.1); }
+}
+
+/* Floating particles */
+.portfolio-particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.portfolio-particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    animation: float 15s infinite;
+    opacity: 0.6;
+}
+
+@media (prefers-color-scheme: light) {
+    .portfolio-particle {
+        opacity: 0.4;
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+    }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.6; }
+    100% {
+        transform: translateY(-100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+.portfolio-container {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 60px 24px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Profile Section */
+.portfolio-profile {
+    text-align: center;
+    margin-bottom: 60px;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 3D Profile Container */
+.portfolio-profile-3d-container {
+    perspective: 800px;
+    width: 180px;
+    height: 180px;
+    margin: 0 auto 28px;
+    position: relative;
+}
+
+.portfolio-profile-3d-scene {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    animation: profile3DRotate 40s ease-in-out infinite;
+}
+
+@keyframes profile3DRotate {
+    0% { transform: rotateY(0deg) rotateX(0deg); }
+    12% { transform: rotateY(75deg) rotateX(15deg); }
+    25% { transform: rotateY(-60deg) rotateX(-20deg); }
+    37% { transform: rotateY(80deg) rotateX(-25deg); }
+    50% { transform: rotateY(-75deg) rotateX(30deg); }
+    62% { transform: rotateY(65deg) rotateX(-15deg); }
+    75% { transform: rotateY(-80deg) rotateX(20deg); }
+    87% { transform: rotateY(50deg) rotateX(-10deg); }
+    100% { transform: rotateY(0deg) rotateX(0deg); }
+}
+
+/* Logo - Behind the profile */
+.portfolio-logo-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: visible;
+    transform: translateZ(-40px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.portfolio-logo-back img {
+    width: 160px;
+    height: 160px;
+    filter: drop-shadow(0 0 30px rgba(192, 132, 252, 0.4));
+}
+
+@media (prefers-color-scheme: light) {
+    .portfolio-logo-back img {
+        filter: none;
+    }
+}
+
+/* Profile image - Front */
+.portfolio-profile-front {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: visible;
+    transform: translateZ(40px);
+}
+
+.portfolio-profile-image-wrapper {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    position: relative;
+    overflow: visible;
+}
+
+.portfolio-profile-image-ring {
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink), var(--accent-teal));
+    animation: ringRotate 4s linear infinite;
+}
+
+@media (prefers-color-scheme: light) {
+    .portfolio-profile-image-ring {
+        background: linear-gradient(135deg, #9333ea, #ec4899, #14b8a6);
+    }
+}
+
+@keyframes ringRotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.portfolio-profile-image {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--bg-primary);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+@media (prefers-color-scheme: light) {
+    .portfolio-profile-image {
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    }
+}
+
+/* Sushi emoji on hover */
+.portfolio-sushi-hover {
+    position: absolute;
+    top: 8px;
+    left: 60%;
+    transform: translateX(-50%) scale(0);
+    font-size: 2rem;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events: none;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+}
+
+@media (prefers-color-scheme: light) {
+    .portfolio-sushi-hover {
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+    }
+}
+
+.portfolio-profile-3d-container:hover .portfolio-sushi-hover {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+}
+
+/* Mobile: brief peek animation to hint at the easter egg */
+@media (max-width: 768px) {
+    .portfolio-sushi-hover {
+        animation: sushiPeek 6s ease-out 3s infinite;
+    }
+
+    @keyframes sushiPeek {
+        0%, 90%, 100% { opacity: 0; transform: translateX(-50%) scale(0); }
+        10% { opacity: 1; transform: translateX(-50%) scale(1.1); }
+        15%, 20% { opacity: 1; transform: translateX(-50%) scale(1); }
+        30% { opacity: 0; transform: translateX(-50%) scale(0); }
+    }
+}
+
+.portfolio-username {
+    font-size: 3rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: textShimmer 3s ease-in-out infinite;
+    margin-bottom: 8px;
+}
+
+@media (prefers-color-scheme: light) {
+    .portfolio-username {
+        background: linear-gradient(135deg, #7c3aed, #db2777);
+        -webkit-background-clip: text;
+        background-clip: text;
+    }
+}
+
+@keyframes textShimmer {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(1.2); }
+}
+
+.portfolio-username-expand {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeIn 0.6s ease-out 0.3s forwards;
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+.portfolio-username-expand span {
+    color: var(--accent-teal);
+}
+
+.portfolio-real-name {
+    font-size: 1.25rem;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    opacity: 0;
+    animation: fadeIn 0.6s ease-out 0.5s forwards;
+}
+
+.portfolio-instagram-handle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: fadeIn 0.6s ease-out 0.6s forwards;
+}
+
+.portfolio-instagram-handle a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: rgba(244, 114, 182, 0.1);
+    border: 1px solid rgba(244, 114, 182, 0.2);
+    transition: all 0.3s ease;
+}
+
+.portfolio-instagram-handle a:hover {
+    color: var(--accent-pink);
+    background: rgba(244, 114, 182, 0.2);
+    border-color: var(--accent-pink);
+    transform: scale(1.05);
+}
+
+@media (prefers-color-scheme: light) {
+    .portfolio-instagram-handle a {
+        background: rgba(236, 72, 153, 0.08);
+        border: 1px solid rgba(236, 72, 153, 0.2);
+    }
+
+    .portfolio-instagram-handle a:hover {
+        background: rgba(236, 72, 153, 0.15);
+    }
+}
+
+.portfolio-instagram-icon {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s;
+}
+
+.portfolio-instagram-handle a:hover .portfolio-instagram-icon {
+    transform: rotate(10deg);
+}
+
+.portfolio-role {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    opacity: 0;
+    animation: fadeIn 0.6s ease-out 0.7s forwards;
+}
+
+.portfolio-role strong {
+    color: var(--accent-gold);
+}
+
+/* Tooltip for UX Engineer */
+.portfolio-tooltip-trigger {
+    position: relative;
+    cursor: pointer;
+    border-bottom: 1px dashed var(--accent-gold);
+}
+
+.portfolio-tooltip {
+    position: absolute;
+    bottom: calc(100% + 12px);
+    left: 50%;
+    transform: translateX(-50%) scale(0.9);
+    background: var(--bg-secondary);
+    border: 1px solid rgba(212, 169, 68, 0.3);
+    border-radius: 12px;
+    padding: 14px 18px;
+    width: max-content;
+    max-width: 280px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    z-index: 100;
+    pointer-events: none;
+}
+
+@media (prefers-color-scheme: light) {
+    .portfolio-tooltip {
+        background: var(--bg-secondary);
+        border: 1px solid rgba(180, 83, 9, 0.15);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .portfolio-tooltip::after {
+        border-top-color: var(--bg-secondary);
+    }
+}
+
+.portfolio-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 8px solid transparent;
+    border-top-color: var(--bg-secondary);
+}
+
+.portfolio-tooltip strong {
+    color: var(--accent-teal);
+}
+
+.portfolio-tooltip-trigger:hover .portfolio-tooltip,
+.portfolio-tooltip-trigger.active .portfolio-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) scale(1);
+    pointer-events: auto;
+}
+
+/* Apps Section */
+.portfolio-apps-section {
+    width: 100%;
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out 0.9s forwards;
+}
+
+.portfolio-apps-title {
+    text-align: center;
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 32px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+}
+
+.portfolio-apps-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+@media (max-width: 600px) {
+    .portfolio-apps-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* App Card Base */
+.portfolio-app-card {
+    position: relative;
+    border-radius: 24px;
+    padding: 32px 24px;
+    text-decoration: none;
+    color: var(--text-primary);
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-height: 280px;
+}
+
+.portfolio-app-card:hover {
+    transform: translateY(-8px) scale(1.02);
+}
+
+.portfolio-app-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 24px;
+    padding: 2px;
+    background: linear-gradient(135deg, var(--card-accent), transparent 60%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.5;
+    transition: opacity 0.3s;
+}
+
+.portfolio-app-card:hover::before {
+    opacity: 1;
+}
+
+/* Light mode app card borders */
+@media (prefers-color-scheme: light) {
+    .portfolio-app-card::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 24px;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        pointer-events: none;
+    }
+}
+
+/* NutriKit Card */
+.portfolio-app-card.nutrikit {
+    --card-accent: #A164FF;
+    background: linear-gradient(145deg, rgba(93, 0, 255, 0.15), rgba(45, 212, 191, 0.1));
+    box-shadow: 0 8px 32px rgba(93, 0, 255, 0.2);
+}
+
+.portfolio-app-card.nutrikit:hover {
+    box-shadow: 0 16px 48px rgba(93, 0, 255, 0.35);
+}
+
+@media (prefers-color-scheme: light) {
+    .portfolio-app-card.nutrikit {
+        background: linear-gradient(145deg, rgba(147, 51, 234, 0.06), rgba(20, 184, 166, 0.04));
+        box-shadow: 0 4px 24px rgba(147, 51, 234, 0.1), 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .portfolio-app-card.nutrikit:hover {
+        box-shadow: 0 12px 40px rgba(147, 51, 234, 0.18), 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+}
+
+/* Chunes Card */
+.portfolio-app-card.chunes {
+    --card-accent: #f472b6;
+    background: linear-gradient(145deg, rgba(192, 132, 252, 0.15), rgba(244, 114, 182, 0.1));
+    box-shadow: 0 8px 32px rgba(192, 132, 252, 0.2);
+}
+
+.portfolio-app-card.chunes:hover {
+    box-shadow: 0 16px 48px rgba(244, 114, 182, 0.35);
+}
+
+@media (prefers-color-scheme: light) {
+    .portfolio-app-card.chunes {
+        background: linear-gradient(145deg, rgba(147, 51, 234, 0.05), rgba(236, 72, 153, 0.05));
+        box-shadow: 0 4px 24px rgba(236, 72, 153, 0.1), 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .portfolio-app-card.chunes:hover {
+        box-shadow: 0 12px 40px rgba(236, 72, 153, 0.18), 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+}
+
+.portfolio-app-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 18px;
+    margin-bottom: 16px;
+    animation: iconBounce 2s ease-in-out infinite;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+@media (prefers-color-scheme: light) {
+    .portfolio-app-icon {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+}
+
+.portfolio-app-card:nth-child(2) .portfolio-app-icon {
+    animation-delay: 0.5s;
+}
+
+@keyframes iconBounce {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    25% { transform: translateY(-6px) rotate(-2deg); }
+    75% { transform: translateY(-6px) rotate(2deg); }
+}
+
+.portfolio-app-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.portfolio-app-card.nutrikit .portfolio-app-name {
+    background: linear-gradient(135deg, #A164FF, var(--accent-teal));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+@media (prefers-color-scheme: light) {
+    .portfolio-app-card.nutrikit .portfolio-app-name {
+        background: linear-gradient(135deg, #7c3aed, #0d9488);
+        -webkit-background-clip: text;
+        background-clip: text;
+    }
+}
+
+.portfolio-app-card.chunes .portfolio-app-name {
+    background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+@media (prefers-color-scheme: light) {
+    .portfolio-app-card.chunes .portfolio-app-name {
+        background: linear-gradient(135deg, #9333ea, #db2777);
+        -webkit-background-clip: text;
+        background-clip: text;
+    }
+}
+
+.portfolio-app-tagline {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.portfolio-app-cta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    padding: 8px 16px;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    margin-top: auto;
+}
+
+.portfolio-app-card.nutrikit .portfolio-app-cta {
+    background: rgba(93, 0, 255, 0.2);
+    color: #A164FF;
+    border: 1px solid rgba(93, 0, 255, 0.3);
+}
+
+.portfolio-app-card.nutrikit:hover .portfolio-app-cta {
+    background: rgba(93, 0, 255, 0.4);
+    border-color: #A164FF;
+}
+
+@media (prefers-color-scheme: light) {
+    .portfolio-app-card.nutrikit .portfolio-app-cta {
+        background: rgba(147, 51, 234, 0.1);
+        color: #7c3aed;
+        border: 1px solid rgba(147, 51, 234, 0.2);
+    }
+
+    .portfolio-app-card.nutrikit:hover .portfolio-app-cta {
+        background: rgba(147, 51, 234, 0.18);
+        border-color: rgba(147, 51, 234, 0.4);
+    }
+}
+
+.portfolio-app-card.chunes .portfolio-app-cta {
+    background: rgba(244, 114, 182, 0.2);
+    color: var(--accent-pink);
+    border: 1px solid rgba(244, 114, 182, 0.3);
+}
+
+.portfolio-app-card.chunes:hover .portfolio-app-cta {
+    background: rgba(244, 114, 182, 0.4);
+    border-color: var(--accent-pink);
+}
+
+@media (prefers-color-scheme: light) {
+    .portfolio-app-card.chunes .portfolio-app-cta {
+        background: rgba(236, 72, 153, 0.1);
+        color: #db2777;
+        border: 1px solid rgba(236, 72, 153, 0.2);
+    }
+
+    .portfolio-app-card.chunes:hover .portfolio-app-cta {
+        background: rgba(236, 72, 153, 0.18);
+        border-color: rgba(236, 72, 153, 0.4);
+    }
+}
+
+/* Footer */
+.portfolio-footer {
+    margin-top: 60px;
+    text-align: center;
+    opacity: 0;
+    animation: fadeIn 0.6s ease-out 1.2s forwards;
+}
+
+.portfolio-footer-text {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.portfolio-footer-text span {
+    display: inline-block;
+    animation: heartbeat 1.5s ease-in-out infinite;
+    color: var(--accent-pink);
+}
+
+@media (prefers-color-scheme: light) {
+    .portfolio-footer-text span {
+        color: #ec4899;
+    }
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    25% { transform: scale(1.15); }
+    40% { transform: scale(1); }
+    60% { transform: scale(1.1); }
+}
