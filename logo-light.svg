@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="190px" height="190px" viewBox="0 0 190 190" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>logo-light</title>
+    <desc>Light mode version of pxlshpr logo</desc>
+    <defs>
+        <linearGradient x1="-9.76888889%" y1="0%" x2="109.768889%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#C084FC" offset="0%"></stop>
+            <stop stop-color="#F472B6" offset="50%"></stop>
+            <stop stop-color="#2DD4BF" offset="100%"></stop>
+        </linearGradient>
+        <path d="M147.123222,133.033551 L111.990998,101.393987 C111.029686,100.529417 109.490525,101.177848 109.45119,102.464283 L108.001389,149.49931 C107.933102,151.673701 110.396768,152.996588 112.195941,151.749231 L121.081536,145.593179 C121.956177,144.989034 123.169634,145.332775 123.584632,146.306688 L128.299208,157.316971 C129.494242,160.10594 132.672346,161.720484 135.545523,160.684053 C138.608045,159.577292 140.076269,156.171211 138.818166,153.233646 L133.980139,141.93204 C133.562526,140.960741 134.156116,139.853979 135.201463,139.650853 L145.841316,137.588392 C147.995039,137.17174 148.748852,134.497366 147.12302,133.033884 L147.123222,133.033551 Z" id="path-2"></path>
+        <filter x="-58.8%" y="-35.8%" width="217.5%" height="178.3%" filterUnits="objectBoundingBox" id="filter-3">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.12 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="logo" fill-rule="nonzero">
+            <circle id="Oval" fill="#F5F5F4" cx="95" cy="95" r="95"></circle>
+            <rect id="Rectangle" fill="#C084FC" opacity="0.9" x="40" y="45" width="22" height="22" rx="4"></rect>
+            <rect id="Rectangle" fill="#F472B6" opacity="0.9" x="67" y="45" width="22" height="22" rx="4"></rect>
+            <rect id="Rectangle" fill="#FB923C" opacity="0.9" x="94" y="45" width="22" height="22" rx="4"></rect>
+            <rect id="Rectangle" fill="#F472B6" opacity="0.9" x="40" y="72" width="22" height="22" rx="4"></rect>
+            <rect id="Rectangle" fill="#2DD4BF" opacity="0.9" x="67" y="72" width="22" height="22" rx="4"></rect>
+            <rect id="Rectangle" fill="#C084FC" opacity="0.9" x="94" y="72" width="22" height="22" rx="4"></rect>
+            <rect id="Rectangle" fill="#F472B6" opacity="0.8" x="121" y="72" width="22" height="22" rx="4"></rect>
+            <rect id="Rectangle" fill="#FB923C" opacity="0.9" x="67" y="99" width="22" height="22" rx="4"></rect>
+            <rect id="Rectangle" fill="#F472B6" opacity="0.9" x="94" y="99" width="22" height="22" rx="4"></rect>
+            <rect id="Rectangle" fill="#2DD4BF" opacity="0.9" x="121" y="99" width="22" height="22" rx="4"></rect>
+            <g id="Path">
+                <use fill="black" fill-opacity="1" filter="url(#filter-3)" xlink:href="#path-2"></use>
+                <use fill="url(#linearGradient-1)" xlink:href="#path-2"></use>
+            </g>
+            <circle id="Oval" fill="#FBBF24" opacity="0.9" cx="145" cy="50" r="4"></circle>
+            <circle id="Oval" fill="#2DD4BF" opacity="0.8" cx="155" cy="65" r="2.5"></circle>
+            <circle id="Oval" fill="#F472B6" opacity="0.7" cx="50" cy="125" r="3"></circle>
+        </g>
+    </g>
+</svg>

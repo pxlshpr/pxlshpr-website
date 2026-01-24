@@ -52,7 +52,8 @@
             }
 
             /* Profile adjustments */
-            .logo-back svg {
+            .logo-back svg,
+            .logo-back img {
                 filter: drop-shadow(0 0 20px rgba(147, 51, 234, 0.25));
             }
 
@@ -151,9 +152,13 @@
                 border-color: rgba(236, 72, 153, 0.4);
             }
 
-            /* SVG logo background - light cream to match page */
-            .logo-bg {
-                fill: #f5f5f4;
+            /* Show light logo, hide dark logo */
+            .logo-dark {
+                display: none;
+            }
+
+            .logo-light-img {
+                display: flex;
             }
 
             /* App card subtle borders for definition */
@@ -318,7 +323,8 @@
             justify-content: center;
         }
 
-        .logo-back svg {
+        .logo-back svg,
+        .logo-back img {
             width: 160px;
             height: 160px;
             filter: drop-shadow(0 0 30px rgba(192, 132, 252, 0.4));
@@ -425,6 +431,11 @@
         .cursor-animate {
             animation: cursorMove 3s ease-in-out infinite;
             transform-origin: 110px 105px;
+        }
+
+        /* Default: show dark logo, hide light logo */
+        .logo-light-img {
+            display: none;
         }
 
         @keyframes cursorMove {
@@ -777,8 +788,8 @@
             <!-- 3D Profile with Logo Behind -->
             <div class="profile-3d-container">
                 <div class="profile-3d-scene">
-                    <!-- Logo behind -->
-                    <div class="logo-back">
+                    <!-- Logo behind - Dark mode (inline SVG with animations) -->
+                    <div class="logo-back logo-dark">
                         <svg viewBox="0 0 190 190" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <defs>
                                 <linearGradient id="cursorGrad" x1="-9.77%" y1="0%" x2="109.77%" y2="100%">
@@ -793,7 +804,7 @@
                                 </filter>
                                 <path id="cursorPath" d="M147.123222,133.033551 L111.990998,101.393987 C111.029686,100.529417 109.490525,101.177848 109.45119,102.464283 L108.001389,149.49931 C107.933102,151.673701 110.396768,152.996588 112.195941,151.749231 L121.081536,145.593179 C121.956177,144.989034 123.169634,145.332775 123.584632,146.306688 L128.299208,157.316971 C129.494242,160.10594 132.672346,161.720484 135.545523,160.684053 C138.608045,159.577292 140.076269,156.171211 138.818166,153.233646 L133.980139,141.93204 C133.562526,140.960741 134.156116,139.853979 135.201463,139.650853 L145.841316,137.588392 C147.995039,137.17174 148.748852,134.497366 147.12302,133.033884 L147.123222,133.033551 Z"/>
                             </defs>
-                            <circle class="logo-bg" cx="95" cy="95" r="95" fill="#0a0a0f"/>
+                            <circle cx="95" cy="95" r="95" fill="#0a0a0f"/>
                             <!-- Pixel grid -->
                             <rect class="pixel-pulse" x="40" y="45" width="22" height="22" rx="4" fill="#c084fc" opacity="0.9"/>
                             <rect class="pixel-pulse" x="67" y="45" width="22" height="22" rx="4" fill="#f472b6" opacity="0.9"/>
@@ -815,6 +826,10 @@
                             <circle cx="155" cy="65" r="2.5" fill="#2dd4bf" opacity="0.8"/>
                             <circle cx="50" cy="125" r="3" fill="#f472b6" opacity="0.7"/>
                         </svg>
+                    </div>
+                    <!-- Logo behind - Light mode (static image) -->
+                    <div class="logo-back logo-light-img">
+                        <img src="logo-light.svg" alt="pxlshpr logo" width="160" height="160">
                     </div>
 
                     <!-- Profile image front -->
