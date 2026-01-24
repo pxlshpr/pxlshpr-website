@@ -134,17 +134,18 @@
             height: 100%;
             position: relative;
             transform-style: preserve-3d;
-            animation: profile3DRotate 12s ease-in-out infinite;
+            animation: profile3DRotate 40s ease-in-out infinite;
         }
 
         @keyframes profile3DRotate {
             0% { transform: rotateY(0deg) rotateX(0deg); }
-            15% { transform: rotateY(25deg) rotateX(10deg); }
-            30% { transform: rotateY(-15deg) rotateX(-8deg); }
-            45% { transform: rotateY(20deg) rotateX(-12deg); }
-            60% { transform: rotateY(-25deg) rotateX(15deg); }
-            75% { transform: rotateY(10deg) rotateX(-5deg); }
-            90% { transform: rotateY(-10deg) rotateX(8deg); }
+            12% { transform: rotateY(75deg) rotateX(15deg); }
+            25% { transform: rotateY(-60deg) rotateX(-20deg); }
+            37% { transform: rotateY(80deg) rotateX(-25deg); }
+            50% { transform: rotateY(-75deg) rotateX(30deg); }
+            62% { transform: rotateY(65deg) rotateX(-15deg); }
+            75% { transform: rotateY(-80deg) rotateX(20deg); }
+            87% { transform: rotateY(50deg) rotateX(-10deg); }
             100% { transform: rotateY(0deg) rotateX(0deg); }
         }
 
@@ -154,7 +155,7 @@
             width: 100%;
             height: 100%;
             backface-visibility: visible;
-            transform: translateZ(-2px);
+            transform: translateZ(-40px);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -172,7 +173,7 @@
             width: 100%;
             height: 100%;
             backface-visibility: visible;
-            transform: translateZ(2px);
+            transform: translateZ(40px);
         }
 
         .profile-image-wrapper {
@@ -227,7 +228,7 @@
 
         .cursor-animate {
             animation: cursorMove 3s ease-in-out infinite;
-            transform-origin: 115px 120px;
+            transform-origin: 110px 105px;
         }
 
         @keyframes cursorMove {
@@ -326,6 +327,57 @@
 
         .role strong {
             color: var(--accent-gold);
+        }
+
+        /* Tooltip for UX Engineer */
+        .tooltip-trigger {
+            position: relative;
+            cursor: pointer;
+            border-bottom: 1px dashed var(--accent-gold);
+        }
+
+        .tooltip {
+            position: absolute;
+            bottom: calc(100% + 12px);
+            left: 50%;
+            transform: translateX(-50%) scale(0.9);
+            background: var(--bg-secondary);
+            border: 1px solid rgba(212, 169, 68, 0.3);
+            border-radius: 12px;
+            padding: 14px 18px;
+            width: max-content;
+            max-width: 280px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: var(--bg-secondary);
+        }
+
+        .tooltip strong {
+            color: var(--accent-teal);
+        }
+
+        .tooltip-trigger:hover .tooltip,
+        .tooltip-trigger.active .tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) scale(1);
+            pointer-events: auto;
         }
 
         /* Apps Section */
@@ -438,7 +490,7 @@
         .app-name {
             font-size: 1.5rem;
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
         }
 
         .nutrikit .app-name {
@@ -534,41 +586,41 @@
                 <div class="profile-3d-scene">
                     <!-- Logo behind -->
                     <div class="logo-back">
-                        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg viewBox="0 0 190 190" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <defs>
-                                <linearGradient id="cursorGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" stop-color="#c084fc"/>
-                                    <stop offset="50%" stop-color="#f472b6"/>
-                                    <stop offset="100%" stop-color="#2dd4bf"/>
+                                <linearGradient id="cursorGrad" x1="-9.77%" y1="0%" x2="109.77%" y2="100%">
+                                    <stop offset="0%" stop-color="#C084FC"/>
+                                    <stop offset="50%" stop-color="#F472B6"/>
+                                    <stop offset="100%" stop-color="#2DD4BF"/>
                                 </linearGradient>
-                                <filter id="glow">
-                                    <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
-                                    <feMerge>
-                                        <feMergeNode in="coloredBlur"/>
-                                        <feMergeNode in="SourceGraphic"/>
-                                    </feMerge>
+                                <filter id="cursorShadow" x="-58.8%" y="-35.8%" width="217.5%" height="178.3%" filterUnits="objectBoundingBox">
+                                    <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"/>
+                                    <feGaussianBlur stdDeviation="7.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"/>
+                                    <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"/>
                                 </filter>
+                                <path id="cursorPath" d="M147.123222,133.033551 L111.990998,101.393987 C111.029686,100.529417 109.490525,101.177848 109.45119,102.464283 L108.001389,149.49931 C107.933102,151.673701 110.396768,152.996588 112.195941,151.749231 L121.081536,145.593179 C121.956177,144.989034 123.169634,145.332775 123.584632,146.306688 L128.299208,157.316971 C129.494242,160.10594 132.672346,161.720484 135.545523,160.684053 C138.608045,159.577292 140.076269,156.171211 138.818166,153.233646 L133.980139,141.93204 C133.562526,140.960741 134.156116,139.853979 135.201463,139.650853 L145.841316,137.588392 C147.995039,137.17174 148.748852,134.497366 147.12302,133.033884 L147.123222,133.033551 Z"/>
                             </defs>
-                            <circle cx="100" cy="100" r="95" fill="#0a0a0f"/>
+                            <circle cx="95" cy="95" r="95" fill="#0a0a0f"/>
                             <!-- Pixel grid -->
-                            <rect class="pixel-pulse" x="45" y="50" width="22" height="22" rx="4" fill="#c084fc"/>
-                            <rect class="pixel-pulse" x="72" y="50" width="22" height="22" rx="4" fill="#f472b6"/>
-                            <rect class="pixel-pulse" x="99" y="50" width="22" height="22" rx="4" fill="#fb923c"/>
-                            <rect class="pixel-pulse" x="45" y="77" width="22" height="22" rx="4" fill="#f472b6"/>
-                            <rect class="pixel-pulse" x="72" y="77" width="22" height="22" rx="4" fill="#2dd4bf"/>
-                            <rect class="pixel-pulse" x="99" y="77" width="22" height="22" rx="4" fill="#c084fc"/>
-                            <rect class="pixel-pulse" x="126" y="77" width="22" height="22" rx="4" fill="#f472b6" opacity="0.8"/>
-                            <rect class="pixel-pulse" x="72" y="104" width="22" height="22" rx="4" fill="#fb923c"/>
-                            <rect class="pixel-pulse" x="99" y="104" width="22" height="22" rx="4" fill="#f472b6"/>
-                            <rect class="pixel-pulse" x="126" y="104" width="22" height="22" rx="4" fill="#2dd4bf"/>
-                            <!-- Fixed cursor with straight edges -->
-                            <g class="cursor-animate" filter="url(#glow)">
-                                <path d="M115 118 L152 148 L142 152 L148 172 L138 175 L132 155 L122 162 Z" fill="url(#cursorGrad)"/>
+                            <rect class="pixel-pulse" x="40" y="45" width="22" height="22" rx="4" fill="#c084fc" opacity="0.9"/>
+                            <rect class="pixel-pulse" x="67" y="45" width="22" height="22" rx="4" fill="#f472b6" opacity="0.9"/>
+                            <rect class="pixel-pulse" x="94" y="45" width="22" height="22" rx="4" fill="#fb923c" opacity="0.9"/>
+                            <rect class="pixel-pulse" x="40" y="72" width="22" height="22" rx="4" fill="#f472b6" opacity="0.9"/>
+                            <rect class="pixel-pulse" x="67" y="72" width="22" height="22" rx="4" fill="#2dd4bf" opacity="0.9"/>
+                            <rect class="pixel-pulse" x="94" y="72" width="22" height="22" rx="4" fill="#c084fc" opacity="0.9"/>
+                            <rect class="pixel-pulse" x="121" y="72" width="22" height="22" rx="4" fill="#f472b6" opacity="0.8"/>
+                            <rect class="pixel-pulse" x="67" y="99" width="22" height="22" rx="4" fill="#fb923c" opacity="0.9"/>
+                            <rect class="pixel-pulse" x="94" y="99" width="22" height="22" rx="4" fill="#f472b6" opacity="0.9"/>
+                            <rect class="pixel-pulse" x="121" y="99" width="22" height="22" rx="4" fill="#2dd4bf" opacity="0.9"/>
+                            <!-- Cursor -->
+                            <g class="cursor-animate">
+                                <use fill="black" fill-opacity="1" filter="url(#cursorShadow)" href="#cursorPath"/>
+                                <use fill="url(#cursorGrad)" href="#cursorPath"/>
                             </g>
                             <!-- Sparkles -->
-                            <circle cx="150" cy="55" r="4" fill="#fbbf24" opacity="0.9"/>
-                            <circle cx="160" cy="70" r="2.5" fill="#2dd4bf" opacity="0.8"/>
-                            <circle cx="55" cy="130" r="3" fill="#f472b6" opacity="0.7"/>
+                            <circle cx="145" cy="50" r="4" fill="#fbbf24" opacity="0.9"/>
+                            <circle cx="155" cy="65" r="2.5" fill="#2dd4bf" opacity="0.8"/>
+                            <circle cx="50" cy="125" r="3" fill="#f472b6" opacity="0.7"/>
                         </svg>
                     </div>
 
@@ -595,7 +647,7 @@
                 </a>
             </p>
 
-            <p class="role"><strong>UX Engineer</strong> crafting delightful apps</p>
+            <p class="role"><span class="tooltip-trigger"><strong>UX Engineer</strong><span class="tooltip">I have a <strong>Software Engineering</strong> degree from <strong>UWA</strong> in Australia and currently specialize in creating <strong>iOS apps</strong>.</span></span> crafting delightful apps</p>
         </section>
 
         <section class="apps-section">
@@ -647,6 +699,20 @@
 
             document.querySelector('.bg-gradient').style.transform =
                 `translate(${x}px, ${y}px) scale(1.1)`;
+        });
+
+        // Tooltip tap support for mobile
+        const tooltipTrigger = document.querySelector('.tooltip-trigger');
+        tooltipTrigger.addEventListener('click', (e) => {
+            e.preventDefault();
+            tooltipTrigger.classList.toggle('active');
+        });
+
+        // Dismiss tooltip when tapping elsewhere
+        document.addEventListener('click', (e) => {
+            if (!tooltipTrigger.contains(e.target)) {
+                tooltipTrigger.classList.remove('active');
+            }
         });
     </script>
 </body>
