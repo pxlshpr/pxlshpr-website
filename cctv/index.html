@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<title>Lazeez CCTV — Fixing the Laggy Camera Feed (DMSS / Dahua NVR)</title>
+<style>
+  :root{
+    --bg:#0f1115; --card:#181b22; --card2:#1f232c; --line:#2a2f3a;
+    --text:#e7ebf2; --muted:#9aa3b2; --accent:#4da3ff; --good:#3ddc84;
+    --warn:#ffb454; --bad:#ff6b6b; --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-text-size-adjust:100%}
+  .wrap{max-width:820px;margin:0 auto;padding:24px 18px 80px}
+  header.hero{padding:36px 0 22px;border-bottom:1px solid var(--line);margin-bottom:28px}
+  .eyebrow{color:var(--accent);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:12px;margin:0 0 8px}
+  h1{font-size:30px;line-height:1.25;margin:0 0 10px}
+  .sub{color:var(--muted);font-size:15px;margin:0}
+  .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+  .pill{background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:12.5px;color:var(--muted)}
+  .pill b{color:var(--text)}
+  h2{font-size:22px;margin:42px 0 14px;padding-top:8px;border-top:1px solid var(--line);padding-top:28px}
+  h2:first-of-type{border-top:none;padding-top:8px}
+  h3{font-size:17px;margin:26px 0 10px;color:var(--text)}
+  p{margin:12px 0}
+  a{color:var(--accent)}
+  code{font-family:var(--mono);background:var(--card2);padding:1.5px 6px;border-radius:5px;font-size:13.5px;border:1px solid var(--line)}
+  pre{background:#0a0c10;border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow:auto;font-family:var(--mono);font-size:13px;line-height:1.55}
+  ul,ol{padding-left:22px;margin:12px 0}
+  li{margin:6px 0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:18px 0}
+  .tldr{background:linear-gradient(180deg,#16202b,#141821);border:1px solid #243447}
+  .tldr h3{margin-top:0;color:var(--good)}
+  .callout{border-left:3px solid var(--accent);background:var(--card2);padding:12px 16px;border-radius:0 10px 10px 0;margin:18px 0;font-size:14.5px}
+  .callout.warn{border-left-color:var(--warn)}
+  .callout.bad{border-left-color:var(--bad)}
+  .callout.good{border-left-color:var(--good)}
+  .callout .lbl{font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:11px;display:block;margin-bottom:4px}
+  .callout.warn .lbl{color:var(--warn)} .callout.bad .lbl{color:var(--bad)} .callout.good .lbl{color:var(--good)} .callout .lbl{color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  th{background:var(--card2);font-size:12.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+  td code{white-space:nowrap}
+  figure{margin:18px 0;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;}
+  figure img{display:block;max-width:100%;height:auto;border-radius:8px;margin:0 auto;border:1px solid var(--line)}
+  figure.phone img{max-width:300px}
+  figcaption{color:var(--muted);font-size:13px;margin-top:10px;text-align:center;line-height:1.5}
+  .gallery{display:flex;flex-wrap:wrap;gap:12px}
+  .gallery figure{flex:1 1 240px;margin:0}
+  .step{display:flex;gap:14px;margin:16px 0}
+  .step .n{flex:0 0 30px;height:30px;border-radius:50%;background:var(--accent);color:#001a33;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:14px}
+  .step .body{flex:1}
+  .step .body p:first-child{margin-top:3px}
+  nav.toc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:24px 0;font-size:14.5px}
+  nav.toc strong{display:block;margin-bottom:6px;color:var(--muted);text-transform:uppercase;font-size:11px;letter-spacing:.07em}
+  nav.toc ol{margin:0;padding-left:20px}
+  kbd{font-family:var(--mono);background:#0a0c10;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:1px 6px;font-size:12.5px}
+  footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+  .ok{color:var(--good)} .no{color:var(--bad)}
+  hr.soft{border:none;border-top:1px solid var(--line);margin:30px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Home / CCTV Notes</p>
+  <h1>Fixing the Laggy Camera Feed — Lazeez Restaurant DMSS / Dahua NVR</h1>
+  <p class="sub">How we diagnosed and fixed Channel&nbsp;9 streaming slow/choppy in the <b>DMSS</b> iPhone app, what each setting does, and the final recommended configuration. Includes the actual screenshots taken during the session.</p>
+  <div class="meta">
+    <span class="pill">Date: <b>22 Apr 2026</b></span>
+    <span class="pill">App: <b>DMSS</b> (iOS) + <b>SmartPSS</b> (macOS)</span>
+    <span class="pill">NVR: <b>DHI-NVR5232-4KS2</b></span>
+    <span class="pill">NVR SN: <b>7H04666PAZ5CA4E</b></span>
+    <span class="pill">Problem camera: <b>Channel&nbsp;9</b> — DH-IPC-HDW2230T-AS-S2</span>
+  </div>
+</header>
+
+<div class="card tldr">
+  <h3>TL;DR — what actually fixed it</h3>
+  <p>The slow camera (Channel&nbsp;9) was set to <b>4096&nbsp;Kbps</b> while a smooth camera on the same NVR ran fine at <b>2048&nbsp;Kbps</b>. The camera's link to the NVR couldn't sustain 4&nbsp;Mbps cleanly. We <b>dropped Channel&nbsp;9's bitrate to match the smooth camera</b> (2048&nbsp;Kbps main / 512&nbsp;Kbps sub) and that made it watchable. The codec swap (H.265&nbsp;→&nbsp;H.264) we tried first was a red herring — bitrate, not codec, was the bottleneck.</p>
+  <p style="margin-bottom:0"><b>Where to make the change:</b> you can't do it in DMSS for cameras behind an NVR — use <b>SmartPSS</b> on a Mac/PC → add the NVR by SN (P2P) → <b>Device&nbsp;CFG → Encode → Channel&nbsp;9</b>. Full walkthrough below.</p>
+</div>
+
+<nav class="toc">
+  <strong>Contents</strong>
+  <ol>
+    <li><a href="#background">Background — why some feeds lag and others don't</a></li>
+    <li><a href="#why-ch9">Identifying the slow camera (Channel&nbsp;9)</a></li>
+    <li><a href="#dmss-deadend">Why DMSS itself can't fix it</a></li>
+    <li><a href="#smartpss">Getting into the NVR with SmartPSS (over P2P, no LAN needed)</a></li>
+    <li><a href="#encode">The Encode screen — what each setting does</a></li>
+    <li><a href="#the-fix">The fix: codec experiment → the real cause (bitrate)</a></li>
+    <li><a href="#audio">Audio: making voices clearer</a></li>
+    <li><a href="#final">Final recommended settings</a></li>
+    <li><a href="#leftover">Still-laggy? The physical-link checklist</a></li>
+    <li><a href="#credentials">Reference: devices, credentials, IPs</a></li>
+  </ol>
+</nav>
+
+<!-- ───────────────────────────────────── -->
+<h2 id="background">1 · Background — why some feeds lag and others don't</h2>
+<p>On this setup all cameras are IP cameras wired (PoE) into a single <b>NVR</b> (Network Video Recorder — the box that records footage, powers the cameras over Ethernet, and streams everything to the DMSS app). DMSS connects to the NVR, and the NVR relays each camera.</p>
+<p>Common reasons one feed is choppy while others are real-time:</p>
+<ul>
+  <li><b>Sub-stream vs main-stream:</b> grid/multi-view uses each camera's low-res <i>sub-stream</i>; full-screen usually switches to the <i>main-stream</i>.</li>
+  <li><b>Per-camera encode settings:</b> each channel has its own codec / frame rate / bitrate. A camera set too high for its link will stutter.</li>
+  <li><b>Codec:</b> H.265 is ~50% more bandwidth-efficient than H.264 but heavier for the phone to <i>decode</i>. Older cameras are H.264-only.</li>
+  <li><b>Connection path:</b> on home Wi-Fi DMSS talks to the NVR over LAN (fast); away from home it goes through Dahua's shared <b>P2P</b> relay (slower).</li>
+  <li><b>Physical link:</b> a long/damaged PoE cable run can negotiate down to 10&nbsp;Mbps half-duplex and starve the stream.</li>
+</ul>
+
+<!-- ───────────────────────────────────── -->
+<h2 id="why-ch9">2 · Identifying the slow camera</h2>
+<p>In DMSS, the home screen lists device groups. The restaurant's NVR appears as <b>"Lazeez Res"</b> (also visible under another saved group earlier in the session as "Office N Home" — same physical NVR). Tapping a tile's <b>⋯</b> → <b>Device Details</b> shows that camera's model and serial.</p>
+
+<div class="gallery">
+  <figure class="phone"><img src="assets/dmss-home.png" alt="DMSS home screen"><figcaption>DMSS home screen. Each group (e.g. "Office N Home" / "Lazeez Res") is one NVR. Tap the <b>⋯</b> next to the <i>group title</i> for NVR-level settings; tap <b>⋯</b> on a tile for that one camera.</figcaption></figure>
+  <figure class="phone"><img src="assets/dmss-grid-device-details.png" alt="DMSS multi-window grid with Channel 9 menu"><figcaption>Multi-window grid. Tapping <b>Channel&nbsp;9</b>'s <b>⋯</b> opens a sheet with <b>Device&nbsp;Details</b>.</figcaption></figure>
+  <figure class="phone"><img src="assets/dmss-device-info.png" alt="DMSS Device Info for Channel 9"><figcaption>Device Info confirms the slow one: <b>Channel&nbsp;9</b>, model <b>DH-IPC-HDW2230T-AS-S2</b>, SN <b>7J05522PAGB6282</b>.</figcaption></figure>
+</div>
+
+<div class="callout">
+  <span class="lbl">Naming note</span>
+  "HDW2230T-AS-S2" — the <b>AS</b> suffix means it has an audio-input jack + alarm I/O; <b>S2</b> is the hardware refresh. It supports both H.264 and H.265. A different, smooth camera on the same NVR (Channel&nbsp;16, model IPC-HDBW2220R-VFS) was the comparison point that cracked the case — see §6.
+</div>
+
+<!-- ───────────────────────────────────── -->
+<h2 id="dmss-deadend">3 · Why DMSS itself can't fix it</h2>
+<p>For cameras connected <i>behind an NVR</i>, DMSS strips out the encode settings. The per-camera <b>⋯ → Device Details</b> screen only exposes <b>AI</b>, <b>Image Adjustment</b> (just WDR + Flip), and <b>More</b> (Audio Recording + Audio Noise Reduction). There is no codec / bitrate / frame-rate control here.</p>
+<div class="gallery">
+  <figure class="phone"><img src="assets/dmss-function-settings.png" alt="DMSS Channel 9 Function Settings"><figcaption>Channel&nbsp;9 → Device Details. Only AI / Image Adjustment / More — no encode options.</figcaption></figure>
+  <figure class="phone"><img src="assets/dmss-image-adjustment.png" alt="DMSS Image Adjustment"><figcaption>"Image Adjustment" = Wide Dynamic Range + Flip Image only.</figcaption></figure>
+  <figure class="phone"><img src="assets/dmss-more-noise-reduction.png" alt="DMSS More - Audio Noise Reduction"><figcaption>"More" → <b>Audio Noise Reduction</b> was <b>off</b> — worth turning on (helps the cheap on-board mic). See §7.</figcaption></figure>
+</div>
+<p><b>So:</b> to change encode settings you go in through the NVR — easiest from a laptop using <b>SmartPSS</b>.</p>
+
+<!-- ───────────────────────────────────── -->
+<h2 id="smartpss">4 · Getting into the NVR with SmartPSS</h2>
+<p><b>SmartPSS</b> is Dahua's desktop client (Windows/macOS). It can connect to the NVR over the same <b>P2P</b> link DMSS uses — <span class="ok">no LAN access, no port forwarding</span>, works from anywhere with internet.</p>
+
+<div class="callout warn">
+  <span class="lbl">macOS note</span>
+  The Mac build of SmartPSS was discontinued; the last release is <code>General_SMARTPSS-MAC … V2.003 … 20210129.tar.gz</code> (still the current Mac version). It's unsigned, so macOS Gatekeeper blocks it. Clear the quarantine flag once:
+  <pre>xattr -dr com.apple.quarantine ~/Downloads/SmartPSS.app</pre>
+  Re-run that if a future macOS update re-quarantines it. (A copy of the app is kept — see §10.)
+</div>
+
+<div class="step"><div class="n">1</div><div class="body">
+  <p><b>First launch:</b> SmartPSS asks you to create a <i>local app password</i> (just for this client — not your Dahua account) and set security questions.</p>
+  <figure><img src="assets/smartpss-init.png" alt="SmartPSS first-run initialization"><figcaption>SmartPSS first run — password setting + security questions.</figcaption></figure>
+</div></div>
+<div class="step"><div class="n">2</div><div class="body">
+  <p>Go to <b>Devices → Add</b>. Set <b>Method to add</b> = <code>SN (For Device Support P2P)</code>.</p>
+</div></div>
+<div class="step"><div class="n">3</div><div class="body">
+  <p>Fill in:</p>
+  <ul>
+    <li><b>Device Name:</b> <code>Lazeez NVR</code></li>
+    <li><b>SN:</b> <code>7H04666PAZ5CA4E</code> &nbsp;<span class="callout bad" style="display:inline;padding:2px 8px;border-radius:6px;font-size:12.5px">use the <b>NVR's</b> SN — not a camera SN like 7J05522…, which only gives you that one camera</span></li>
+    <li><b>User Name:</b> <code>admin</code></li>
+    <li><b>Password:</b> <code>«NVR device password»</code> &nbsp;(the <i>device</i> password, not the SmartPSS app password — see §10. <span class="muted">Omitted from this public copy — in the private notes.</span>)</li>
+  </ul>
+  <p>Save. Status should flip to <b>Online</b> within ~10&nbsp;s, and all 32 channels appear.</p>
+</div></div>
+<div class="step"><div class="n">4</div><div class="body">
+  <p>Click the <b>gear / "Device CFG"</b> icon on the NVR's row (the cog in the Operation column, between the pencil and the export-arrow). That opens the device configuration.</p>
+</div></div>
+
+<!-- ───────────────────────────────────── -->
+<h2 id="encode">5 · The Encode screen — what each setting does</h2>
+<p>In <b>Device CFG</b>: left sidebar → <b>Camera</b> section → click the <b>Encode</b> button. At the top is a <b>Channel No.</b> dropdown — pick <b>Channel&nbsp;9</b>. You get <b>Main Stream</b> (left) and <b>Sub Stream</b> (right) side by side.</p>
+
+<figure><img src="assets/smartpss-encode.png" alt="SmartPSS Encode dialog for Channel 9 with codec dropdown open">
+  <figcaption>SmartPSS → Device CFG → <b>Encode</b> for the Lazeez NVR. Channel No. dropdown at top; Main Stream / Sub Stream panels; the <b>Encode Type</b> dropdown is open showing <code>H.264 / H.264H / H.265 / H.264B</code>. Note <b>StreamCtrl: BRC_CBR</b>, <b>FPS 25</b>, <b>Bit Stream</b>, and the <b>Audio Setup</b> block (Encode Mode <code>G.711A</code>, Audio Frequency <code>8k</code>).</figcaption>
+</figure>
+
+<table>
+<thead><tr><th>Setting</th><th>What it does</th><th>Notes for this camera</th></tr></thead>
+<tbody>
+<tr><td><b>Encode Type</b></td><td>Video codec.</td><td><code>H.265</code> = half the bandwidth of <code>H.264</code> for the same quality, but heavier to decode on the phone. <code>H.264</code> = lighter to decode. Avoid <code>H.264B</code> (baseline, lowest quality) and <code>MJPEG</code> (huge bitrate). H.264H is a higher-profile H.264 if offered.</td></tr>
+<tr><td><b>Smart Codec</b> (Smart H.265+/H.264+)</td><td>Extra compression that drops bitrate on static scenes.</td><td>Can cause bitrate spikes / dropped frames when there's movement — was already <b>off (closed)</b> here; leave it off.</td></tr>
+<tr><td><b>Resolution</b></td><td>Pixel size of the stream.</td><td>Main = 1080p (1920×1080) — leave it. Sub = D1-ish (704×480 / 640×480).</td></tr>
+<tr><td><b>FPS</b></td><td>Frame rate.</td><td>25 (or 30). <b>Lowering bitrate does NOT raise FPS</b> — FPS is independent.</td></tr>
+<tr><td><b>StreamCtrl</b> (Bit Rate Type)</td><td><code>CBR</code> = constant bitrate; <code>VBR</code> = variable.</td><td><code>CBR</code> is fine and predictable for live view.</td></tr>
+<tr><td><b>Bit Stream</b> (Bitrate, Kbps)</td><td>How much data the stream uses. <b>This was the actual problem.</b></td><td>Match a known-good camera. Here: Main <code>2048</code>, Sub <code>512</code>. Higher = sharper but needs a stronger link.</td></tr>
+<tr><td><b>Ref Stream</b></td><td>Just the recommended bitrate range for the chosen settings — read-only. Changing it confirms the codec change took.</td><td>—</td></tr>
+<tr><td><b>I Frame Interval</b></td><td>Keyframe spacing.</td><td>~2× the FPS (so ~50 at 25&nbsp;fps).</td></tr>
+<tr><td><b>Audio Setup → Encode Mode</b></td><td>Audio codec.</td><td>Default <code>G.711A</code> @ <code>8k</code> = telephone quality. Switch to <code>AAC</code> @ <code>16k</code> if the dropdown offers it (this camera's firmware may only have G.711A / G.711Mu / PCM). See §7.</td></tr>
+<tr><td><b>Copy current configuration to</b></td><td>Bulk-applies these settings to other channels.</td><td>Leave as <b>None</b> or you'll overwrite other cameras.</td></tr>
+</tbody>
+</table>
+<p>After any change: click <b>Save</b> / <b>Apply</b>, then on the phone <b>force-quit DMSS</b> (swipe it out of the app switcher — backgrounding isn't enough; it caches old stream params) and reopen.</p>
+
+<!-- ───────────────────────────────────── -->
+<h2 id="the-fix">6 · The fix — codec experiment, then the real cause</h2>
+
+<h3>Attempt 1 — switch H.265 → H.264 (didn't fix it)</h3>
+<p>Channel&nbsp;9 was on <b>H.265</b> for both streams. We changed both <b>Encode Type</b> dropdowns to <b>H.264</b> and saved. The <b>Ref Stream</b> range updated (512–5632 → 1792–6144 Kbps), confirming the change stuck — but the feed was <b>still slow</b>, including in the grid.</p>
+
+<h3>The clue — a smooth camera on the same NVR</h3>
+<p>A camera that played back smoothly (Channel&nbsp;16, IPC-HDBW2220R-VFS) was running <b>H.265 at 2048&nbsp;Kbps main / 512&nbsp;Kbps sub</b>. Channel&nbsp;9 was at <b>4096 / 1024</b>. Same NVR, same P2P path, same phone — so the codec wasn't the bottleneck. <b>Bitrate was.</b> Channel&nbsp;9's link couldn't sustain 4&nbsp;Mbps.</p>
+
+<div class="callout good">
+  <span class="lbl">The fix that worked</span>
+  In the Encode dialog for Channel&nbsp;9, set <b>Main Stream → Bit Stream:</b> <code>4096 → 2048</code> Kbps and <b>Sub Stream → Bit Stream:</b> <code>1024 → 512</code> Kbps — matching the smooth camera. Save, force-quit DMSS, reopen. <b>That made it watchable.</b>
+</div>
+
+<h3>Codec, after the bitrate fix</h3>
+<p>With Channel&nbsp;9 now identical to the smooth Channel&nbsp;16 (H.265, 2048/512), any residual lag isn't codec or bitrate — it's physical (§9). Practical guidance:</p>
+<ul>
+  <li><b>If the link is the bottleneck (bandwidth-bound):</b> H.265 wins — same quality, half the data.</li>
+  <li><b>If the phone struggles to decode (decode-bound):</b> H.264 wins — much lighter to decode.</li>
+  <li>Going <i>below</i> ~1536 Kbps main / 384 Kbps sub starts showing compression blocks on motion — not worth it.</li>
+  <li>Lower bitrate doesn't increase frame rate; it just gives more headroom so the stream recovers faster after dropouts.</li>
+</ul>
+
+<!-- ───────────────────────────────────── -->
+<h2 id="audio">7 · Audio — making voices clearer</h2>
+<p>The muffled audio is the codec/sample rate plus the cheap on-board mic. Things that help, in order of effort:</p>
+<ol>
+  <li><b>DMSS → Channel&nbsp;9 → ⋯ → Device Details → More → turn ON "Audio Noise Reduction"</b> (it was off — see screenshot in §3). Quick win for these mics.</li>
+  <li><b>SmartPSS → Encode → Audio Setup:</b> change <b>Encode Mode</b> from <code>G.711A</code> → <code>AAC</code> (or <code>G.711Mu</code> as fallback), and bump <b>Audio Frequency</b> <code>8k → 16k</code> if offered. Some firmware only lists G.711A/G.711Mu/PCM — if so, try <code>PCM</code> (uncompressed; you have bitrate headroom now) and 16k.</li>
+  <li><b>Hardware limit:</b> the HDW2230T-AS-S2's built-in mic is a tiny surface-mount part inside the dome. No codec setting rescues that. The real upgrade: plug a ~$20 line-level pickup mic (e.g. Dahua HFW1009) into the camera's <b>Audio Input</b> jack, then switch the audio input source from <b>Mic</b> to <b>Line-in</b> in the camera's own settings.</li>
+</ol>
+<div class="callout"><span class="lbl">Observed</span> In this session, switching the codec didn't make the audio noticeably better — strongly pointing at the mic/firmware ceiling. The Audio Noise Reduction toggle + an external mic are the meaningful next steps.</div>
+
+<!-- ───────────────────────────────────── -->
+<h2 id="final">8 · Final recommended settings (Channel&nbsp;9)</h2>
+<table>
+<thead><tr><th></th><th>Main Stream</th><th>Sub Stream</th></tr></thead>
+<tbody>
+<tr><td><b>Encode Type</b></td><td>H.265 <span class="muted">(or H.264 if the phone is decode-bound)</span></td><td>H.265 / H.264 (match Main)</td></tr>
+<tr><td><b>Smart Codec</b></td><td>Off</td><td>Off</td></tr>
+<tr><td><b>Resolution</b></td><td>1920×1080</td><td>704×480 (or 640×480)</td></tr>
+<tr><td><b>FPS</b></td><td>25</td><td>15–25</td></tr>
+<tr><td><b>StreamCtrl</b></td><td>CBR</td><td>CBR</td></tr>
+<tr><td><b>Bit Stream</b></td><td><b>2048&nbsp;Kbps</b> (don't exceed unless the link is solid)</td><td><b>512&nbsp;Kbps</b></td></tr>
+<tr><td><b>I Frame Interval</b></td><td>50</td><td>~30–50</td></tr>
+<tr><td><b>Audio — Encode Mode</b></td><td>AAC @ 16k if available, else G.711A @ 16k</td><td>same</td></tr>
+<tr><td><b>Copy current config to</b></td><td colspan="2">None</td></tr>
+</tbody>
+</table>
+<p>Then: <b>Save</b> → force-quit & reopen DMSS → also flip on <b>Audio Noise Reduction</b> in DMSS.</p>
+
+<!-- ───────────────────────────────────── -->
+<h2 id="leftover">9 · Still laggy? The physical-link checklist</h2>
+<p>If Channel&nbsp;9 is still choppy at settings identical to a smooth camera, it's the hardware/cabling. From <b>Device CFG → Camera → Remote Device</b> you can see each camera's IP (all on Dahua's internal PoE subnet <code>192.168.18.x</code>, meaning every camera is wired directly into the NVR's back PoE ports). Channel&nbsp;9 is at <code>192.168.18.237</code>. The Remote Device screen doesn't show link speed, so on-site:</p>
+<ul>
+  <li><b>Swap Channel&nbsp;9's Ethernet to a different PoE port</b> on the back of the NVR (the NVR re-assigns automatically).</li>
+  <li><b>Inspect the cable run</b> — Cat5/5e over ~50 m, or a pinched/wet cable, causes packet loss and a 10 Mbps half-duplex negotiation.</li>
+  <li><b>Try the spare camera</b> — a second HDW2230T-AS-S2 was discovered (un-added) at <code>192.168.18.239</code>. If it streams fine on Channel&nbsp;9's port, the camera itself is the fault.</li>
+  <li><b>Update the camera firmware</b> — older HDW2230T-AS-S2 firmware had a known intermittent packet-burst bug.</li>
+  <li><b>Camera-direct override:</b> some camera firmware ignores the NVR's encode override. On the LAN, add the camera by IP in SmartPSS (user <code>admin</code>, password in the private notes) and force the codec/bitrate in its own Encode page.</li>
+</ul>
+<div class="gallery">
+  <figure class="phone"><img src="assets/dmss-lazeez-res-1.png" alt="DMSS Lazeez Res group, channels 1-8"><figcaption>"Lazeez Res" group in DMSS — Channels 01–08.</figcaption></figure>
+  <figure class="phone"><img src="assets/dmss-lazeez-res-2.png" alt="DMSS Lazeez Res group, channels 8-14"><figcaption>…Channels 8–14. Channel&nbsp;9 is the dining-table camera (HDW2230T-AS-S2).</figcaption></figure>
+</div>
+
+<!-- ───────────────────────────────────── -->
+<h2 id="credentials">10 · Reference — devices, credentials, files</h2>
+<table>
+<thead><tr><th>Item</th><th>Value</th></tr></thead>
+<tbody>
+<tr><td>NVR model</td><td>DHI-NVR5232-4KS2 (32 channels)</td></tr>
+<tr><td>NVR serial (use this in SmartPSS / DMSS)</td><td><code>7H04666PAZ5CA4E</code></td></tr>
+<tr><td>Problem camera</td><td>Channel&nbsp;9 — DH-IPC-HDW2230T-AS-S2, SN <code>7J05522PAGB6282</code>, IP <code>192.168.18.237</code></td></tr>
+<tr><td>Smooth comparison camera</td><td>Channel&nbsp;16 — IPC-HDBW2220R-VFS (ran fine at H.265 / 2048 / 512)</td></tr>
+<tr><td>Spare camera discovered (un-added)</td><td>another HDW2230T-AS-S2 at IP <code>192.168.18.239</code></td></tr>
+<tr><td>Camera PoE subnet</td><td><code>192.168.18.x</code> (NVR's internal PoE network)</td></tr>
+</tbody>
+</table>
+
+<div class="callout bad">
+  <span class="lbl">Three separate password layers — don't mix them</span>
+  <table style="margin-top:8px">
+  <thead><tr><th>Layer</th><th>What it's for</th><th>Credentials</th></tr></thead>
+  <tbody>
+  <tr><td>SmartPSS app login</td><td>Local password for the SmartPSS client itself (created on first launch)</td><td><code>admin</code> / <span class="muted">«in private notes»</span></td></tr>
+  <tr><td>NVR device login</td><td>Authenticates to the NVR when adding it in SmartPSS / browser</td><td><code>admin</code> / <span class="muted">«in private notes»</span></td></tr>
+  <tr><td>One standalone camera</td><td>A camera with its own password</td><td><code>admin</code> / <span class="muted">«in private notes»</span></td></tr>
+  </tbody>
+  </table>
+  <p style="margin:10px 0 0;font-size:13px" class="muted">Passwords are intentionally omitted from this public page. They're in the private Obsidian note (<code>CCTV.md</code>) — synced to GitHub (private), iCloud Drive, and pxlhome.</p>
+</div>
+
+<h3>The apps</h3>
+<ul>
+  <li><b>DMSS</b> — Dahua's mobile app (iOS/Android). Mobile-only; there is no DMSS web portal. View-only for encode settings when cameras sit behind an NVR.</li>
+  <li><b>SmartPSS</b> — Dahua's desktop client. The Mac build is discontinued; the kept copy is <code>General_SMARTPSS-MAC_ChnEng_IS_V2.003.0000005.0.R.20210129</code>. Its replacement "SmartPSS Lite" is Windows-only. If you need a fresh download, get it from <a href="https://dahuawiki.com/OSX/How_To_Install_SmartPSS_on_Mac">dahuawiki.com</a> or <a href="https://securefind.com.au/knowledge-base/dahua-smartpss-download/">SecureFind</a> — <b>not</b> filehorse / filehippo / softonic (adware). After downloading: <code>xattr -dr com.apple.quarantine /path/to/SmartPSS.app</code>.</li>
+  <li><b>NVR web UI</b> — served at <code>http://&lt;NVR-LAN-IP&gt;</code>, LAN-only by default (or via VPN/Tailscale). Login = the <i>NVR device</i> credentials above.</li>
+</ul>
+
+<h3>Where the SmartPSS app copy lives</h3>
+<p>A zipped copy of <code>SmartPSS.app</code> for macOS is kept alongside this document — see the companion Obsidian note for the current location(s). It's also mirrored to iCloud Drive and to pxlhome so it survives a machine loss.</p>
+
+<footer>
+  <p>Written up from the 22 Apr 2026 troubleshooting session. Screenshots are the originals captured during that session (DMSS on iPhone; SmartPSS on macOS). If anything here drifts from reality, trust the device — re-check the Encode screen in SmartPSS.</p>
+</footer>
+
+</div>
+</body>
+</html>
