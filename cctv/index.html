@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
 <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
 <title>Lazeez CCTV — Fixing the Laggy Camera Feed (DMSS / Dahua NVR)</title>
@@ -10,7 +11,20 @@
   :root{
     --bg:#0f1115; --card:#181b22; --card2:#1f232c; --line:#2a2f3a;
     --text:#e7ebf2; --muted:#9aa3b2; --accent:#4da3ff; --good:#3ddc84;
-    --warn:#ffb454; --bad:#ff6b6b; --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+    --warn:#ffb454; --bad:#ff6b6b; --pre-bg:#0a0c10;
+    --tldr-bg:linear-gradient(180deg,#16202b,#141821); --tldr-line:#243447;
+    --badge-fg:#001a33;
+    --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme: light){
+    :root{
+      --bg:#f6f7f9; --card:#ffffff; --card2:#eef1f4; --line:#dde1e7;
+      --text:#1b1f24; --muted:#5b6470; --accent:#0a66c2; --good:#137a44;
+      --warn:#8a5d0c; --bad:#b5362a; --pre-bg:#f2f3f5;
+      --tldr-bg:linear-gradient(180deg,#eef5fb,#f6f9fc); --tldr-line:#cfe0ee;
+      --badge-fg:#ffffff;
+    }
+    figure,pre,nav.toc,.card{box-shadow:0 1px 3px rgba(16,24,40,.06)}
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
@@ -31,11 +45,11 @@
   p{margin:12px 0}
   a{color:var(--accent)}
   code{font-family:var(--mono);background:var(--card2);padding:1.5px 6px;border-radius:5px;font-size:13.5px;border:1px solid var(--line)}
-  pre{background:#0a0c10;border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow:auto;font-family:var(--mono);font-size:13px;line-height:1.55}
+  pre{background:var(--pre-bg);border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow:auto;font-family:var(--mono);font-size:13px;line-height:1.55}
   ul,ol{padding-left:22px;margin:12px 0}
   li{margin:6px 0}
   .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:18px 0}
-  .tldr{background:linear-gradient(180deg,#16202b,#141821);border:1px solid #243447}
+  .tldr{background:var(--tldr-bg);border:1px solid var(--tldr-line)}
   .tldr h3{margin-top:0;color:var(--good)}
   .callout{border-left:3px solid var(--accent);background:var(--card2);padding:12px 16px;border-radius:0 10px 10px 0;margin:18px 0;font-size:14.5px}
   .callout.warn{border-left-color:var(--warn)}
@@ -54,13 +68,13 @@
   .gallery{display:flex;flex-wrap:wrap;gap:12px}
   .gallery figure{flex:1 1 240px;margin:0}
   .step{display:flex;gap:14px;margin:16px 0}
-  .step .n{flex:0 0 30px;height:30px;border-radius:50%;background:var(--accent);color:#001a33;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:14px}
+  .step .n{flex:0 0 30px;height:30px;border-radius:50%;background:var(--accent);color:var(--badge-fg);font-weight:800;display:flex;align-items:center;justify-content:center;font-size:14px}
   .step .body{flex:1}
   .step .body p:first-child{margin-top:3px}
   nav.toc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:24px 0;font-size:14.5px}
   nav.toc strong{display:block;margin-bottom:6px;color:var(--muted);text-transform:uppercase;font-size:11px;letter-spacing:.07em}
   nav.toc ol{margin:0;padding-left:20px}
-  kbd{font-family:var(--mono);background:#0a0c10;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:1px 6px;font-size:12.5px}
+  kbd{font-family:var(--mono);background:var(--pre-bg);border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:1px 6px;font-size:12.5px}
   footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
   .ok{color:var(--good)} .no{color:var(--bad)}
   hr.soft{border:none;border-top:1px solid var(--line);margin:30px 0}
