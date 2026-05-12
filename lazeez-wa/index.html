@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lazeez · WhatsApp Order + Deposit Flow — Setup Guide</title>
+<style>
+  :root{
+    --bg:#0e1116; --panel:#161b22; --panel2:#1c232d; --line:#2a323d;
+    --ink:#e6edf3; --muted:#9aa7b4; --accent:#25D366; --accent2:#34b7f1;
+    --warn:#e3a008; --bad:#f85149; --good:#3fb950;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink);
+    font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-text-size-adjust:100%; padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:24px 18px 80px}
+  header.page{margin-bottom:8px}
+  h1{font-size:24px;line-height:1.25;margin:.2em 0 .1em}
+  h2{font-size:19px;margin:2.2em 0 .6em;padding-top:.4em;border-top:1px solid var(--line)}
+  h3{font-size:16px;margin:1.6em 0 .4em;color:var(--accent2)}
+  p{margin:.6em 0}
+  .sub{color:var(--muted);font-size:14px;margin-top:0}
+  code,kbd{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:1px 5px;font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace}
+  pre{background:#0a0d12;border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow:auto;font:12.5px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;color:#cfe3d6}
+  pre .c{color:#6b7785}
+  a{color:var(--accent2)}
+  ul,ol{padding-left:1.3em}
+  li{margin:.25em 0}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;margin:14px 0}
+  .card.flag-good{border-left:4px solid var(--good)}
+  .card.flag-warn{border-left:4px solid var(--warn)}
+  .card.flag-bad{border-left:4px solid var(--bad)}
+  .pill{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:999px;background:var(--panel2);border:1px solid var(--line);color:var(--muted);vertical-align:middle}
+  .pill.free{color:var(--good);border-color:#1f3a26}
+  .pill.paid{color:var(--warn);border-color:#3a3015}
+  .pill.opt{color:var(--accent2);border-color:#1d3540}
+  /* checklist */
+  .check{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border:1px solid var(--line);border-radius:10px;margin:7px 0;background:var(--panel)}
+  .check input{margin-top:4px;width:18px;height:18px;accent-color:var(--accent);flex:none}
+  .check label{cursor:pointer}
+  .check .meta{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+  .check.done{opacity:.5}
+  .check.done label{text-decoration:line-through}
+  .grp{margin:18px 0}
+  .grp > .hd{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:4px}
+  .grp .hd .nm{font-weight:700;font-size:15px}
+  .grp .hd .pct{font-size:12px;color:var(--muted)}
+  .bar{height:5px;background:var(--panel2);border-radius:999px;overflow:hidden}
+  .bar > i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0;transition:width .25s}
+  .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+  button.btn{background:var(--panel2);color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:7px 12px;font:13px/1 inherit;cursor:pointer}
+  button.btn:active{transform:translateY(1px)}
+  /* phone mock */
+  .flow{display:flex;flex-direction:column;gap:10px;margin:14px 0}
+  .msg{max-width:78%;padding:8px 12px;border-radius:14px;font-size:14px;position:relative;white-space:pre-wrap;word-break:break-word}
+  .msg.them{align-self:flex-start;background:#20272f;border:1px solid var(--line);border-bottom-left-radius:4px}
+  .msg.you{align-self:flex-end;background:#0b3d2e;border:1px solid #14543f;border-bottom-right-radius:4px}
+  .msg.bot{align-self:flex-end;background:#10243a;border:1px solid #1d3f63;border-bottom-right-radius:4px}
+  .msg.sys{align-self:center;background:#1a1f17;border:1px dashed #3a3a1a;color:#d8c98a;font-size:12.5px;text-align:center;border-radius:8px}
+  .msg .who{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;opacity:.6;margin-bottom:3px}
+  .legend{font-size:12.5px;color:var(--muted);display:flex;gap:14px;flex-wrap:wrap;margin-top:6px}
+  .legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:middle}
+  .legend .l-them::before{background:#20272f;border:1px solid var(--line)}
+  .legend .l-bot::before{background:#10243a;border:1px solid #1d3f63}
+  .legend .l-sys::before{background:#1a1f17;border:1px dashed #3a3a1a}
+  details{border:1px solid var(--line);border-radius:10px;padding:0 14px;margin:10px 0;background:var(--panel)}
+  details>summary{cursor:pointer;padding:12px 0;font-weight:600;list-style:none}
+  details>summary::-webkit-details-marker{display:none}
+  details>summary::before{content:"▸ ";color:var(--muted)}
+  details[open]>summary::before{content:"▾ "}
+  details>div{padding:0 0 14px}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;margin:10px 0}
+  th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+  th{background:var(--panel2)}
+  .small{font-size:13px;color:var(--muted)}
+  hr{border:none;border-top:1px solid var(--line);margin:2em 0}
+  .tag{font-size:11px;background:#10243a;border:1px solid #1d3f63;color:#9fd0ef;border-radius:5px;padding:1px 6px;margin-left:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="page">
+  <h1>WhatsApp Order → Deposit → Receipt flow</h1>
+  <p class="sub">Setup guide &amp; runbook for Lazeez Gourmet · self-hosted on the Vultr box · last reviewed May 2026</p>
+</header>
+
+<div class="card">
+  <p style="margin-top:0"><strong>What this builds:</strong> the customer still taps the existing <em>Order on WhatsApp</em> button on the menu site (which opens a pre-filled <code>wa.me</code> message to your number). The new bit: a small service on your Vultr server receives that message via the <strong>WhatsApp Cloud API</strong>, reads the <code>Grand Total</code> off it, and <strong>auto-replies from your number</strong> with a deposit request (≥ 50%). The customer sends back a transfer receipt photo; the server OCR-checks the amount and drops a ✅/⚠️ note into the same thread so the waitstaff sees the verdict at a glance.</p>
+  <p style="margin-bottom:0"><strong>Cost:</strong> <span class="pill free">free</span> for the messages in this flow (customer always messages first → 24‑h service window → replies are $0). You pay only for the Vultr box you already have. Going <em>outside</em> the 24‑h window later (e.g. "your order's ready" next day) needs a paid utility template — fractions of a cent. <a href="#costs">Cost detail ↓</a></p>
+</div>
+
+<div class="toolbar">
+  <button class="btn" onclick="expandAll(true)">Expand all sections</button>
+  <button class="btn" onclick="expandAll(false)">Collapse all</button>
+  <button class="btn" onclick="resetChecks()">Reset checklist</button>
+  <span class="small" id="overall" style="align-self:center"></span>
+</div>
+
+<!-- ============================================================ -->
+<h2>1 · How it works (the moving parts)</h2>
+<div class="card">
+<pre><span class="c">  Customer phone                    Meta (WhatsApp Cloud API)            Your Vultr box
+  ─────────────                    ────────────────────────            ──────────────</span>
+  [Order on WhatsApp] ──prefilled──▶  receives msg to your number ──webhook POST──▶  /webhook (HTTPS)
+                                                                                       │ parse "Grand Total: MVR x"
+                                                                                       │ compute deposit = ceil(50%)
+   "Pay MVR x to BML …"  ◀──────────  Graph API: send message  ◀──POST /messages──────┘
+        │
+   sends receipt photo  ──────────▶  media event ──webhook POST──▶  download media (OCR)
+                                                                       │ amount? payee? recent? dup ref?
+   "✅ got it" / "⚠️ short" ◀───────  send message  ◀────────────────┘  + write a system note to thread
+                                                                       │
+                                          Waitstaff open the shared Inbox (Meta's WhatsApp Manager Inbox,
+                                          or your own little dashboard) → see the whole thread incl. ✅/⚠️
+</pre>
+<p class="small" style="margin-bottom:0">Key constraint to absorb up front: <strong>the number you put on the Cloud API can no longer be used in the WhatsApp or WhatsApp Business <em>app</em>.</strong> It becomes an API number. Staff read/reply through a web inbox instead (covered in §6). Plan for a dedicated number.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2>2 · The customer &amp; staff UX, end to end</h2>
+
+<h3>Customer's screen</h3>
+<div class="card">
+<div class="flow">
+  <div class="msg you"><span class="who">customer → you (the pre-filled msg, unchanged)</span>*Lazeez Gourmet - Order*
+
+Order Type: *Takeaway*
+
+*Mains*
+• 2 × Reef Burger
+• 1 × Garden Salad
+
+-------------------
+Subtotal: MVR 410.00
+GST (8%): MVR 32.80
+-------------------
+*Grand Total: MVR 442.80*
+
+Thank you!</div>
+  <div class="msg bot"><span class="who">your number → customer · automatic, &lt; 2 s later</span>Thanks for your order! 🙌 To confirm it we need a deposit of at least 50%.
+
+*Deposit due: MVR 221.40*  (of MVR 442.80)
+
+Transfer to:
+• Bank of Maldives — Lazeez Gourmet Pvt Ltd
+• Acct 7770000XXXXXX
+• Reference: your name
+
+Then send a photo/screenshot of the transfer slip here and we'll confirm. Order held 20 min.</div>
+  <div class="msg you"><span class="who">customer → you</span>📎 IMG_4471.jpg  <em>(BML transfer slip — MVR 250.00)</em></div>
+  <div class="msg bot"><span class="who">your number → customer · automatic</span>✅ Payment received — MVR 250.00. Your order is confirmed! See you soon. 🍔</div>
+</div>
+<p class="legend"><span class="l-them"></span>customer</span> <span class="l-bot"></span>auto-reply from your number</span></p>
+</div>
+
+<h3>If something's off</h3>
+<div class="card flag-warn">
+<div class="flow">
+  <div class="msg you"><span class="who">customer → you</span>📎 slip.jpg <em>(shows MVR 100.00)</em></div>
+  <div class="msg bot"><span class="who">auto-reply</span>Hmm — that slip shows *MVR 100.00*, but the deposit is *MVR 221.40*. Could you send the balance (MVR 121.40) and the new slip? If you think this is a mistake, just reply here and a team member will help.</div>
+  <div class="msg sys">⚠️ flag for staff · slip amount 100.00 &lt; required 221.40 · payee matched · slip time 14:32 (8 min ago)</div>
+</div>
+<p class="small" style="margin-bottom:0">The dashed centre note is a <strong>system message</strong> — staff see it inline; the customer does not (it's posted to your dashboard / kept as an internal label, not sent over WhatsApp). If you'd rather keep it dead simple in phase 1, you can instead just send the ⚠️ as a normal message that only staff scroll back to — but a separate internal note is cleaner.</p>
+</div>
+
+<h3>What the waitstaff see</h3>
+<div class="card">
+<p style="margin-top:0">One ordinary-looking WhatsApp thread per customer, in chronological order: <em>order → deposit request → receipt photo → ✅/⚠️ verdict</em>. Because the bot's messages and the verification note live in the same thread, a staffer opening it gets the whole story in three seconds: did they pay, how much, is it enough, anything fishy. They can type a normal reply from the shared inbox at any point (that pauses/overrides nothing — it's the same conversation).</p>
+<p style="margin-bottom:0">Two ways to give them that inbox — pick one (detail in §6):</p>
+<ul style="margin-bottom:0">
+  <li><strong>Meta's built-in Inbox</strong> in WhatsApp Manager (<code>business.facebook.com</code> → WhatsApp Manager → Inbox). Free, web-based, multi-user, basic. <span class="pill opt">phase 1</span></li>
+  <li><strong>Your own little dashboard</strong> on the Vultr box — a page that lists threads + messages + the ✅/⚠️ flags with colour. More work, full control, also free. <span class="pill opt">phase 2 if needed</span></li>
+</ul>
+</div>
+
+<!-- ============================================================ -->
+<h2>3 · Prerequisites <span class="pill">checklist</span></h2>
+<div class="grp" data-grp="prereq">
+  <div class="hd"><span class="nm">Before you touch Meta</span><span class="pct"></span></div>
+  <div class="bar"><i></i></div>
+  <div class="items">
+    <div class="check"><input type="checkbox" id="p1"><label for="p1">Pick a <strong>dedicated phone number</strong> for the API — one not currently registered on WhatsApp/WhatsApp Business. <span class="meta">A second SIM, a spare mobile number, or a fixed line that can receive an SMS/voice OTP once. Once it's on the Cloud API it's "consumed" — you won't use it in the phone app. Don't use the personal number the menu currently points at unless you're ready to migrate it and lose app access on it.</span></label></div>
+    <div class="check"><input type="checkbox" id="p2"><label for="p2">A <strong>Facebook account</strong> you're happy to be the admin (ideally a business one, not a staffer's personal account that might leave).</label></div>
+    <div class="check"><input type="checkbox" id="p3"><label for="p3"><strong>Meta Business Portfolio</strong> created at <a href="https://business.facebook.com">business.facebook.com</a> (Business Manager). Add the legal business name + details.</label></div>
+    <div class="check"><input type="checkbox" id="p4"><label for="p4">Business documents on hand for <strong>verification</strong>: company registration certificate, a recent utility bill / bank statement in the business name, business address &amp; phone. <span class="meta">Maldives: MIRA registration / company incorporation cert works.</span></label></div>
+    <div class="check"><input type="checkbox" id="p5"><label for="p5"><strong>Domain or subdomain</strong> you can point at the Vultr box for the webhook (needs valid HTTPS) — e.g. <code>wa.lazeezmenu.mv</code> or a subdomain of whatever you control. <span class="meta">The Design Gallery note says a real domain is still pending — webhooks won't work on a bare IP with a self-signed cert, so a domain (even a cheap one) is on the critical path.</span></label></div>
+    <div class="check"><input type="checkbox" id="p6"><label for="p6">SSH access to the Vultr server + ability to add an nginx vhost and a systemd service.</label></div>
+    <div class="check"><input type="checkbox" id="p7"><label for="p7">Decide the <strong>deposit rule</strong> in writing: ≥ 50%? rounded up to whole MVR? minimum floor (e.g. never less than MVR 100)? hold time (20 min?). The server needs an exact rule.</label></div>
+    <div class="check"><input type="checkbox" id="p8"><label for="p8">Decide <strong>which bank/wallet</strong> details go in the auto-reply and have the exact account number + name string ready (BML / MIB / m‑Faisaa / Dhiraagu Pay …).</label></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h2>4 · Part A — Meta / WhatsApp Cloud API setup <span class="pill">checklist</span></h2>
+<div class="grp" data-grp="meta">
+  <div class="hd"><span class="nm">Meta Developer + WhatsApp Business Account</span><span class="pct"></span></div>
+  <div class="bar"><i></i></div>
+  <div class="items">
+    <div class="check"><input type="checkbox" id="m1"><label for="m1">Go to <a href="https://developers.facebook.com">developers.facebook.com</a> → register as a developer (if not already).</label></div>
+    <div class="check"><input type="checkbox" id="m2"><label for="m2"><strong>Create an App</strong> → type <em>Business</em> → link it to your Business Portfolio.</label></div>
+    <div class="check"><input type="checkbox" id="m3"><label for="m3">In the app dashboard → <strong>Add product → WhatsApp → Set up</strong>. This auto-creates a WhatsApp Business Account (WABA) and a free <em>test</em> number you can play with immediately.</label></div>
+    <div class="check"><input type="checkbox" id="m4"><label for="m4">Under WhatsApp → <strong>API Setup</strong>, note the <code>WABA ID</code> and the test <code>Phone Number ID</code>. Grab the <strong>temporary access token</strong> (24 h) for first smoke tests.</label></div>
+    <div class="check"><input type="checkbox" id="m5"><label for="m5"><strong>Add your real phone number</strong>: API Setup → "Add phone number" → enter it → verify via SMS or voice OTP → set the <strong>display name</strong> (this goes through a short Meta review — keep it to the business name, e.g. "Lazeez Gourmet").</label></div>
+    <div class="check"><input type="checkbox" id="m6"><label for="m6">Note the <strong>Phone Number ID</strong> of the real number (different from the test one). You'll send messages "from" this ID.</label></div>
+    <div class="check"><input type="checkbox" id="m7"><label for="m7"><strong>Create a permanent token</strong>: Business Settings → Users → <strong>System Users</strong> → add a system user (Admin) → "Generate new token" → pick your app → scopes <code>whatsapp_business_messaging</code> + <code>whatsapp_business_management</code> → expiry <em>Never</em>. <span class="meta">Copy it once; it's not shown again. This is the secret your server uses.</span></label></div>
+    <div class="check"><input type="checkbox" id="m8"><label for="m8">Assign the WABA as an <strong>asset</strong> to that system user (Business Settings → WhatsApp Accounts → select WABA → Add People → the system user → full control).</label></div>
+    <div class="check"><input type="checkbox" id="m9"><label for="m9">Copy the app's <strong>App Secret</strong> (App → Settings → Basic). The server uses it to verify the <code>X-Hub-Signature-256</code> on incoming webhooks.</label></div>
+    <div class="check"><input type="checkbox" id="m10"><label for="m10"><strong>Business verification</strong>: Business Settings → Security Centre → Start Verification → submit the docs. <span class="meta">Until verified you're limited (low messaging tier, can't fully go live). Approval is usually 1–3 business days. Start this early — it runs in parallel with the server work.</span></label></div>
+    <div class="check"><input type="checkbox" id="m11"><label for="m11">Add the <strong>WhatsApp Business Account to your Business Portfolio</strong> and complete the "phone number registration" step (sets a 6‑digit PIN — store it; needed for two-factor / re-registration).</label></div>
+    <div class="check"><input type="checkbox" id="m12"><label for="m12">(Optional, for later) Create a <strong>utility message template</strong> in WhatsApp Manager → Message Templates → category <em>Utility</em> — e.g. an "order ready" or "we couldn't verify your payment, please contact us" template, for messaging customers <em>after</em> the 24‑h window closes. Not needed for the core flow.</label></div>
+    <div class="check"><input type="checkbox" id="m13"><label for="m13">Once webhook + server are up (Part B) and tested: in the app dashboard switch the app from <em>Development</em> to <strong>Live</strong> mode. Confirm the real number's messaging tier (starts at 1,000 business-initiated conversations/24 h — irrelevant here since customer-initiated replies are unlimited &amp; free, but good to know it auto-scales on quality).</label></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h2>5 · Part B — The service on Vultr <span class="pill">checklist</span></h2>
+<div class="grp" data-grp="srv">
+  <div class="hd"><span class="nm">Webhook + auto-reply service</span><span class="pct"></span></div>
+  <div class="bar"><i></i></div>
+  <div class="items">
+    <div class="check"><input type="checkbox" id="s1"><label for="s1">DNS: point <code>wa.&lt;yourdomain&gt;</code> → the Vultr box's IP (A record).</label></div>
+    <div class="check"><input type="checkbox" id="s2"><label for="s2">nginx: add a vhost for <code>wa.&lt;yourdomain&gt;</code> that reverse-proxies to <code>127.0.0.1:8090</code> (pick any free port — <strong>not 3333, not 8080</strong>, those are taken). <span class="meta">8080 = Design Gallery, 3333 = OFF API. 8090/8091 are fine.</span></label></div>
+    <div class="check"><input type="checkbox" id="s3"><label for="s3">TLS: <code>certbot --nginx -d wa.&lt;yourdomain&gt;</code> for a Let's Encrypt cert (auto-renew). Webhooks <em>require</em> a valid public cert.</label></div>
+    <div class="check"><input type="checkbox" id="s4"><label for="s4">Create a small app — Node/Express, or PHP if you'd rather keep it next to the Laravel site. It needs: <code>GET /webhook</code> (verification handshake) and <code>POST /webhook</code> (events). See the <a href="#code">reference code ↓</a>.</label></div>
+    <div class="check"><input type="checkbox" id="s5"><label for="s5">Config / secrets (env file, mode 600): <code>WABA_PHONE_NUMBER_ID</code>, <code>WHATSAPP_TOKEN</code> (the permanent system-user token), <code>APP_SECRET</code>, <code>VERIFY_TOKEN</code> (a random string you invent), <code>GRAPH_VERSION</code> (e.g. <code>v21.0</code>), deposit rule constants, bank-details text.</label></div>
+    <div class="check"><input type="checkbox" id="s6"><label for="s6"><code>GET /webhook</code>: when Meta calls with <code>?hub.mode=subscribe&amp;hub.verify_token=…&amp;hub.challenge=…</code>, check the token matches and echo back <code>hub.challenge</code> verbatim (200, text/plain).</label></div>
+    <div class="check"><input type="checkbox" id="s7"><label for="s7"><code>POST /webhook</code>: <strong>verify the signature</strong> first — HMAC‑SHA256 of the raw body with <code>APP_SECRET</code> must equal the <code>X-Hub-Signature-256</code> header (minus the <code>sha256=</code> prefix). Reject otherwise. Then return <code>200</code> immediately and process async (Meta retries if you're slow).</label></div>
+    <div class="check"><input type="checkbox" id="s8"><label for="s8">In the Meta app dashboard → WhatsApp → <strong>Configuration → Webhook</strong>: Callback URL = <code>https://wa.&lt;yourdomain&gt;/webhook</code>, Verify token = your <code>VERIFY_TOKEN</code>. Click Verify &amp; Save. Then <strong>Subscribe</strong> to the <code>messages</code> field.</label></div>
+    <div class="check"><input type="checkbox" id="s9"><label for="s9"><strong>Parse the order</strong>: on a text message, regex the total — <code>/Grand Total:\s*MVR\s*([\d,]+(?:\.\d+)?)/i</code>. Also detect it's actually a Lazeez order (message starts with <code>*Lazeez Gourmet - Order*</code>) so random "hi" messages don't trigger the deposit reply — for those, either stay silent or send a short "a team member will reply shortly".</label></div>
+    <div class="check"><input type="checkbox" id="s10"><label for="s10"><strong>Compute deposit</strong> per your rule (e.g. <code>Math.ceil(total * 0.5)</code>, floor at MVR 100) and <strong>send the deposit-request message</strong> via <code>POST /{PHONE_NUMBER_ID}/messages</code> (type <code>text</code>). Include total, deposit amount, bank details, hold time.</label></div>
+    <div class="check"><input type="checkbox" id="s11"><label for="s11"><strong>Track state per customer</strong> (a tiny SQLite/Postgres table or even a JSON file): phone → {order total, deposit required, status: awaiting_receipt / partially_paid / confirmed, amounts seen, slip reference numbers seen}. Needed for the receipt step + so the bot doesn't double-reply.</label></div>
+    <div class="check"><input type="checkbox" id="s12"><label for="s12"><strong>Handle image messages</strong> (the receipt): event gives a media <code>id</code> → <code>GET /{media-id}</code> for a short-lived URL → download it with the <code>Authorization: Bearer</code> token → run the receipt check (Part C) → send ✅/⚠️ reply + write the internal note.</label></div>
+    <div class="check"><input type="checkbox" id="s13"><label for="s13">Run it as a <strong>systemd service</strong> (auto-restart, starts on boot). Log to journald. Add a <code>/healthz</code> endpoint and maybe a cron curl to it.</label></div>
+    <div class="check"><input type="checkbox" id="s14"><label for="s14"><strong>Smoke test</strong> end to end with the test number first, then your real number: place a real menu order → confirm the deposit reply arrives → send a photo → confirm the ✅/⚠️ logic. Check signature rejection works (send a bogus POST).</label></div>
+    <div class="check"><input type="checkbox" id="s15"><label for="s15">Back up the state DB (it's small) into whatever backup routine the box already has.</label></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h2>6 · Part C — Server-side receipt verification <span class="pill opt">how far can we go</span></h2>
+<div class="card">
+<p style="margin-top:0"><strong>Short version:</strong> yes, the server can read the slip and sanity-check it — but treat it as an <em>assistant that flags</em>, never as proof of payment. A screenshot can be edited; OCR misreads blurry photos; every bank's slip looks different. The verdict goes <em>to the staff</em>, who still glance at it. If you want real, tamper-proof confirmation, the answer isn't OCR — it's taking the deposit through a payment gateway (see the box at the end).</p>
+<h3>What the check actually does (on each receipt image)</h3>
+<ol>
+  <li><strong>OCR / vision extract</strong> the slip. Two practical options:
+    <ul>
+      <li><em>Tesseract</em> on the box — free, offline, decent on clean BML/MIB slips, weaker on photos-of-screens.</li>
+      <li><em>A vision model</em> (Claude, or a cloud OCR like Google Vision / AWS Textract) — far more robust on messy real-world photos, costs a few cents per image, needs an API key. Given volume, this is cheap and the better choice. You can even ask the model to return structured JSON: <code>{amount, currency, payee_name, payee_account, datetime, reference, bank}</code>.</li>
+    </ul>
+  </li>
+  <li><strong>Validate</strong> against the order state:
+    <ul>
+      <li>Amount ≥ deposit required? (or ≥ remaining balance if they'd part-paid before)</li>
+      <li>Currency is MVR?</li>
+      <li>Payee name / account matches <em>your</em> account (fuzzy match — slips abbreviate names)?</li>
+      <li>Timestamp recent (within, say, the last 2 h)? An old slip = red flag.</li>
+      <li>Reference / transaction number <em>not seen before</em> in your state DB — stops someone re-sending one valid slip for two orders.</li>
+      <li>Did OCR actually find an amount at all? If confidence is low → don't auto-confirm, just flag "couldn't read — please check manually".</li>
+    </ul>
+  </li>
+  <li><strong>Decide &amp; act</strong>:
+    <ul>
+      <li>All green → mark order <code>confirmed</code>, reply ✅ to customer, internal note "✅ verified MVR x, ref #…".</li>
+      <li>Amount short → mark <code>partially_paid</code>, store the credit, reply asking for the balance, internal note ⚠️.</li>
+      <li>Anything else off (stale, wrong payee, dup ref, unreadable) → don't confirm, reply "a team member will check this", internal note ⚠️ <em>with the reason</em>.</li>
+    </ul>
+  </li>
+</ol>
+<h3>How the flag reaches the waitstaff</h3>
+<p>The thread already shows the bot's ✅/⚠️ <em>message</em>. On top of that, write an <strong>internal-only note</strong> they can see in the inbox you choose:</p>
+<ul>
+  <li><em>Meta's WhatsApp Manager Inbox:</em> no true "internal note" feature beyond assigning/labelling conversations. You can apply a <strong>label</strong> like <code>⚠️ payment-check</code> or <code>✅ paid</code> to the conversation via the API — that's visible in the Inbox and is enough to triage at a glance.</li>
+  <li><em>Your own dashboard:</em> render the note as a coloured inline row (the dashed centre bubble in the mockup above) — richest option, and you control exactly what staff see (reason, OCR'd amount, confidence).</li>
+</ul>
+</div>
+<div class="card flag-good">
+<p style="margin:0"><strong>The robust alternative to receipt screenshots — payment links.</strong> If the deposit is collected via a Maldivian gateway (BML's payment gateway / MPOS, Ooredoo m‑Faisaa, Dhiraagu, Fahipay, or a regional one) instead of a manual transfer, the bot can send a <em>pay link</em> for the exact deposit amount, and the gateway calls <em>your</em> server back with a real, signed "paid MVR x, txn #…" webhook. No OCR, no fakes, instant confirmation. Downsides: gateway fees (~2–3%), a merchant account, and integration work. Worth it if order volume is meaningful. You can ship the OCR version first and bolt this on later — the WhatsApp plumbing is identical.</p>
+</div>
+
+<!-- ============================================================ -->
+<h2>7 · Part D — Giving the waitstaff the thread <span class="pill">checklist</span></h2>
+<div class="grp" data-grp="staff">
+  <div class="hd"><span class="nm">Shared inbox for staff</span><span class="pct"></span></div>
+  <div class="bar"><i></i></div>
+  <div class="items">
+    <div class="check"><input type="checkbox" id="i1"><label for="i1"><strong>Decide the model</strong>: (a) Meta's built-in Inbox — fastest to ship, free, basic; (b) a third-party shared inbox (Wati, Respond.io, Rasayel, Twilio Conversations…) — polished, ~$20–50/mo+; (c) your own dashboard on Vultr — free, full control, most work. <span class="meta">Recommended path: (a) for launch, move to (c) only if staff outgrow it.</span></label></div>
+    <div class="check"><input type="checkbox" id="i2"><label for="i2">If (a): each staffer who needs access gets added to the <strong>Business Portfolio</strong> with a role on the WABA → they open <a href="https://business.facebook.com">business.facebook.com</a> → WhatsApp Manager → <strong>Inbox</strong>. Works on mobile browser too. Show them: threads list, opening a thread, replying, applying the <code>✅ paid</code> / <code>⚠️ payment-check</code> labels.</label></div>
+    <div class="check"><input type="checkbox" id="i3"><label for="i3">If (c): build a read-mostly page on the box — list conversations (from your state DB + stored messages), show the message timeline, render ✅/⚠️ notes in colour, a reply box that posts via the Graph API as your number. Put it behind auth (basic auth / a login) and HTTPS. <span class="meta">Note: your server only "sees" messages that arrive after you went live and subscribed to the webhook — it's not a backfill of old WhatsApp history. Store every inbound + outbound message as it flows through.</span></label></div>
+    <div class="check"><input type="checkbox" id="i4"><label for="i4">Either way, <strong>brief the staff on the convention</strong>: ✅ in the thread (or <code>paid</code> label) = take the order to the kitchen; ⚠️ = read the note, eyeball the slip, sort it with the customer before cooking; a human typing in the thread is normal and fine.</label></div>
+    <div class="check"><input type="checkbox" id="i5"><label for="i5">Decide what happens on <strong>no receipt within the hold window</strong> (20 min): bot sends one polite nudge; after that staff decide. (A nudge after the original 24‑h service window would need a paid template — usually not worth it; just let it lapse.)</label></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="costs">8 · Costs, limits, caveats</h2>
+<table>
+<tr><th>Item</th><th>Cost</th><th>Notes</th></tr>
+<tr><td>WhatsApp Cloud API hosting (Meta)</td><td><span class="pill free">$0</span></td><td>Meta hosts it. No fee to use the API itself.</td></tr>
+<tr><td>Messages in <em>this</em> flow (order → deposit reply → ✅/⚠️)</td><td><span class="pill free">$0</span></td><td>Customer always messages first → opens a 24‑h customer-service window → all your replies inside it (free-form, unlimited) are free. This is the whole flow.</td></tr>
+<tr><td>Messaging the customer <em>later</em> (next-day "order ready", "couldn't verify payment")</td><td><span class="pill paid">~¢ per msg</span></td><td>Outside the 24‑h window → needs a pre-approved <em>utility</em> template. Per-message price varies by country; Maldives is in the low band. Only if you choose to do it.</td></tr>
+<tr><td>Vultr server</td><td><span class="pill free">$0 extra</span></td><td>Reuse the box already running the site. New nginx vhost + small service + tiny DB.</td></tr>
+<tr><td>Domain / subdomain</td><td>~$10/yr</td><td>Needed for the webhook's HTTPS cert. (Or a subdomain of a domain you already own.)</td></tr>
+<tr><td>OCR for receipts</td><td><span class="pill free">$0</span> Tesseract / <span class="pill paid">few ¢/img</span> vision API</td><td>Cloud vision/LLM is more reliable on real photos; cost is trivial at café volume.</td></tr>
+<tr><td>Dedicated phone number</td><td>cost of a SIM</td><td>Can't reuse a number that's live in the WhatsApp app. One-time hassle.</td></tr>
+<tr><td>Staff inbox</td><td><span class="pill free">$0</span> (Meta Inbox or own dashboard) / <span class="pill paid">$20–50+/mo</span> (3rd-party)</td><td>Start free.</td></tr>
+</table>
+<div class="card flag-warn" style="margin-top:14px">
+<strong>Caveats worth re-reading:</strong>
+<ul style="margin-bottom:0">
+  <li><strong>The API number leaves the app.</strong> Migrating your current order number means staff lose the WhatsApp app on it and must use the web inbox. Easiest to start with a fresh number and update <code>WHATSAPP_PHONE</code> on the menu site.</li>
+  <li><strong>Business verification is a gate.</strong> Unverified = throttled and can't fully go live. Start it day one.</li>
+  <li><strong>OCR is advisory.</strong> Never auto-confirm on a low-confidence read. The ⚠️ path must always exist. Edited screenshots are a thing — payment links are the real fix if fraud becomes a problem.</li>
+  <li><strong>Webhook needs valid public HTTPS.</strong> No domain ⇒ no webhook. Critical path item.</li>
+  <li><strong>Reply to webhooks fast (&lt; a few seconds).</strong> Ack 200 immediately, do OCR/sending in the background, or Meta retries and you get duplicates. Dedupe on message <code>id</code>.</li>
+  <li><strong>No history backfill.</strong> Your server only sees messages from go-live onward. Store everything as it arrives.</li>
+  <li><strong>Token hygiene.</strong> The permanent system-user token is god-mode for messaging — env file mode 600, never in git, rotate if leaked.</li>
+</ul>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="code">9 · Reference code (Node/Express sketch)</h2>
+<details>
+<summary>Webhook verify + signature check + order parse + send reply</summary>
+<div>
+<pre><span class="c">// app.js — minimal sketch, not production-hardened</span>
+import express from "express";
+import crypto from "crypto";
+
+const {
+  PORT = 8090, GRAPH_VERSION = "v21.0",
+  WABA_PHONE_NUMBER_ID, WHATSAPP_TOKEN, APP_SECRET, VERIFY_TOKEN,
+} = process.env;
+
+const app = express();
+<span class="c">// keep the raw body so we can verify the signature</span>
+app.use(express.json({ verify: (req, _res, buf) =&gt; { req.raw = buf; } }));
+
+<span class="c">// 1) Verification handshake</span>
+app.get("/webhook", (req, res) =&gt; {
+  if (req.query["hub.mode"] === "subscribe" &amp;&amp;
+      req.query["hub.verify_token"] === VERIFY_TOKEN) {
+    return res.status(200).type("text/plain").send(req.query["hub.challenge"]);
+  }
+  res.sendStatus(403);
+});
+
+<span class="c">// 2) Incoming events</span>
+app.post("/webhook", (req, res) =&gt; {
+  const sig = req.get("x-hub-signature-256") || "";
+  const expected = "sha256=" + crypto.createHmac("sha256", APP_SECRET)
+                                      .update(req.raw).digest("hex");
+  if (!crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected)))
+    return res.sendStatus(401);
+
+  res.sendStatus(200);                 <span class="c">// ack FIRST</span>
+  setImmediate(() =&gt; handle(req.body).catch(console.error));   <span class="c">// then work</span>
+});
+
+async function handle(body) {
+  for (const entry of body.entry || []) {
+    for (const ch of entry.changes || []) {
+      const v = ch.value || {};
+      for (const m of v.messages || []) {
+        const from = m.from;                          <span class="c">// customer's number</span>
+        if (alreadySeen(m.id)) continue;              <span class="c">// dedupe Meta retries</span>
+        if (m.type === "text")  await onText(from, m.text.body);
+        if (m.type === "image") await onImage(from, m.image.id);
+      }
+    }
+  }
+}
+
+async function onText(from, text) {
+  if (!text.startsWith("*Lazeez Gourmet - Order*")) {
+    return; <span class="c">// not an order — stay quiet, or send a "we'll reply soon"</span>
+  }
+  const mt = text.match(/Grand Total:\s*MVR\s*([\d,]+(?:\.\d+)?)/i);
+  if (!mt) return reply(from, "Got your order — a team member will confirm shortly.");
+  const total   = parseFloat(mt[1].replace(/,/g, ""));
+  const deposit = Math.max(100, Math.ceil(total * 0.5));   <span class="c">// YOUR rule</span>
+  saveOrder(from, { total, deposit, status: "awaiting_receipt", paid: 0, refs: [] });
+  await reply(from,
+`Thanks for your order! 🙌 To confirm it we need a deposit of at least 50%.
+
+*Deposit due: MVR ${deposit.toFixed(2)}*  (of MVR ${total.toFixed(2)})
+
+Transfer to:
+• Bank of Maldives — Lazeez Gourmet Pvt Ltd
+• Acct 7770000XXXXXX
+• Reference: your name
+
+Then send a photo of the transfer slip here and we'll confirm. Order held 20 min.`);
+}
+
+async function onImage(from, mediaId) {
+  const order = getOrder(from);
+  if (!order) return reply(from, "Send your order first, then the transfer slip 🙏");
+  const buf  = await downloadMedia(mediaId);
+  const slip = await ocrReceipt(buf);   <span class="c">// {amount,currency,payee,datetime,reference,confidence}</span>
+
+  const problems = [];
+  if (!slip || slip.confidence &lt; 0.6)             problems.push("couldn't read the slip clearly");
+  if (slip &amp;&amp; slip.currency &amp;&amp; slip.currency !== "MVR") problems.push(`currency ${slip.currency}`);
+  if (slip &amp;&amp; !payeeMatches(slip.payee))           problems.push("payee doesn't match our account");
+  if (slip &amp;&amp; tooOld(slip.datetime))              problems.push("slip is not recent");
+  if (slip &amp;&amp; order.refs.includes(slip.reference)) problems.push("this slip was used before");
+
+  const amount = slip?.amount ?? 0;
+  const need   = order.deposit - order.paid;
+
+  if (problems.length) {
+    note(from, "⚠️ " + problems.join("; ") + ` · read amount MVR ${amount}`);
+    return reply(from, "Thanks — a team member will check this slip and get back to you.");
+  }
+  if (amount + 1e-6 &lt; need) {
+    order.paid += amount; order.refs.push(slip.reference); order.status = "partially_paid"; saveOrder(from, order);
+    note(from, `⚠️ part payment MVR ${amount}, still need MVR ${(order.deposit - order.paid).toFixed(2)}`);
+    return reply(from, `Got MVR ${amount.toFixed(2)} — short by MVR ${(order.deposit - order.paid).toFixed(2)}. Please send the balance + the new slip.`);
+  }
+  order.paid += amount; order.refs.push(slip.reference); order.status = "confirmed"; saveOrder(from, order);
+  setLabel(from, "✅ paid");
+  note(from, `✅ verified MVR ${amount} · ref ${slip.reference}`);
+  await reply(from, `✅ Payment received — MVR ${amount.toFixed(2)}. Your order is confirmed! See you soon. 🍔`);
+}
+
+<span class="c">// --- Graph API helpers ---</span>
+async function reply(to, body) {
+  await fetch(`https://graph.facebook.com/${GRAPH_VERSION}/${WABA_PHONE_NUMBER_ID}/messages`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${WHATSAPP_TOKEN}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ messaging_product: "whatsapp", to, type: "text", text: { body } }),
+  });
+}
+async function downloadMedia(mediaId) {
+  const meta = await (await fetch(`https://graph.facebook.com/${GRAPH_VERSION}/${mediaId}`,
+                 { headers: { Authorization: `Bearer ${WHATSAPP_TOKEN}` } })).json();
+  const res  = await fetch(meta.url, { headers: { Authorization: `Bearer ${WHATSAPP_TOKEN}` } });
+  return Buffer.from(await res.arrayBuffer());
+}
+<span class="c">// note() / setLabel() / saveOrder() / ocrReceipt() / payeeMatches() / tooOld() — your impls</span>
+
+app.get("/healthz", (_q, r) =&gt; r.send("ok"));
+app.listen(PORT, "127.0.0.1");
+</pre>
+</div>
+</details>
+<details>
+<summary>nginx vhost + systemd unit</summary>
+<div>
+<pre><span class="c"># /etc/nginx/sites-available/wa.lazeezmenu.conf</span>
+server {
+  server_name wa.lazeezmenu.mv;
+  location / {
+    proxy_pass http://127.0.0.1:8090;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+  }
+  <span class="c"># certbot --nginx adds the listen 443 / ssl_certificate lines</span>
+}
+
+<span class="c"># /etc/systemd/system/lazeez-wa.service</span>
+[Unit]
+Description=Lazeez WhatsApp order/deposit webhook
+After=network.target
+[Service]
+WorkingDirectory=/opt/lazeez-wa
+EnvironmentFile=/opt/lazeez-wa/.env      <span class="c"># chmod 600</span>
+ExecStart=/usr/bin/node app.js
+Restart=always
+User=lazeezwa
+[Install]
+WantedBy=multi-user.target
+</pre>
+</div>
+</details>
+<details>
+<summary>OCR via a vision model (sketch)</summary>
+<div>
+<pre><span class="c">// ocrReceipt(buf): ask a vision model for structured JSON.</span>
+<span class="c">// Use the Anthropic SDK or a cloud OCR; example shape only.</span>
+async function ocrReceipt(buf) {
+  const b64 = buf.toString("base64");
+  <span class="c">// send image + prompt: "Extract from this bank transfer slip as JSON:</span>
+  <span class="c">//   amount (number), currency, payee_name, payee_account, datetime (ISO),</span>
+  <span class="c">//   reference, bank. If a field is unreadable use null. Add confidence 0-1."</span>
+  <span class="c">// parse the JSON it returns; clamp/normalise amount &amp; datetime.</span>
+  return { amount: 250, currency: "MVR", payee: "LAZEEZ GOURMET PVT LTD",
+           datetime: "2026-05-12T14:32:00+05:00", reference: "FT26132ABCD", confidence: 0.93 };
+}
+</pre>
+<p class="small" style="margin-bottom:0">If you build this with the Anthropic SDK, turn on prompt caching for the system/instruction block — see the <code>claude-api</code> skill.</p>
+</div>
+</details>
+
+<!-- ============================================================ -->
+<h2>10 · Suggested order of operations</h2>
+<ol>
+  <li>Get a number + a (sub)domain. Start Meta business verification. <span class="tag">days, runs in background</span></li>
+  <li>Create the Meta app + WhatsApp product, play with the <em>test</em> number + temp token.</li>
+  <li>Stand up the Vultr service against the test number: webhook verify, signature check, parse order, send deposit reply. Smoke test.</li>
+  <li>Add image handling + OCR + the ✅/⚠️ logic + state DB. Smoke test with photos.</li>
+  <li>Add the real phone number, get the display name approved, generate the permanent token, point the webhook at prod, flip the app to Live.</li>
+  <li>Wire up the staff inbox (Meta Inbox first) + brief the staff on the ✅/⚠️ convention.</li>
+  <li>Update <code>WHATSAPP_PHONE</code> on the menu site to the new API number. Soft-launch, watch the threads for a few days.</li>
+  <li>Later, if warranted: own dashboard, payment-link deposits, "order ready" utility template.</li>
+</ol>
+
+<p class="small" style="margin-top:30px">Generated as a working doc for Lazeez Gourmet · adjust deposit %, bank details, hold time, and the Graph API version to taste before building.</p>
+
+</div>
+
+<script>
+const KEY = "lazeez-wa-setup-checks-v1";
+function load(){ try{ return JSON.parse(localStorage.getItem(KEY)||"{}"); }catch(e){ return {}; } }
+function save(s){ localStorage.setItem(KEY, JSON.stringify(s)); }
+let state = load();
+function applyOne(cb){
+  const row = cb.closest(".check");
+  if(cb.checked) row.classList.add("done"); else row.classList.remove("done");
+}
+function refreshGroups(){
+  let total=0, done=0;
+  document.querySelectorAll(".grp").forEach(g=>{
+    const boxes=g.querySelectorAll('input[type=checkbox]');
+    const d=[...boxes].filter(b=>b.checked).length;
+    total+=boxes.length; done+=d;
+    const pct = boxes.length? Math.round(d/boxes.length*100):0;
+    g.querySelector(".bar > i").style.width = pct+"%";
+    g.querySelector(".pct").textContent = d+"/"+boxes.length;
+  });
+  const el=document.getElementById("overall");
+  if(el) el.textContent = total? `Overall: ${done}/${total} done` : "";
+}
+document.querySelectorAll('input[type=checkbox]').forEach(cb=>{
+  if(state[cb.id]) cb.checked=true;
+  applyOne(cb);
+  cb.addEventListener("change",()=>{
+    state[cb.id]=cb.checked; save(state); applyOne(cb); refreshGroups();
+  });
+});
+refreshGroups();
+function expandAll(open){ document.querySelectorAll("details").forEach(d=>d.open=open); }
+function resetChecks(){
+  if(!confirm("Clear all checkmarks?")) return;
+  state={}; save(state);
+  document.querySelectorAll('input[type=checkbox]').forEach(cb=>{cb.checked=false;applyOne(cb);});
+  refreshGroups();
+}
+</script>
+</body>
+</html>
