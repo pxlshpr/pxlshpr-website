@@ -66,12 +66,17 @@ a{color:var(--accent);text-decoration:none}
 .tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:14px;border:1px solid var(--sep)}
 table{border-collapse:collapse;width:100%;font-size:13px;background:var(--card)}
 th,td{padding:9px 10px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--sep)}
-th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:var(--card)}
+th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:var(--card);
+  z-index:2;box-shadow:1px 0 0 var(--sep),3px 0 6px rgba(0,0,0,.05)}
+thead th:first-child{z-index:3}
 thead th{cursor:pointer;color:var(--secondary);font-weight:700;font-size:12px;user-select:none}
 thead th.active{color:var(--accent)}
 tbody tr:last-child td{border-bottom:none}
 .bar{height:6px;border-radius:3px;background:var(--accent);display:inline-block;vertical-align:middle;margin-left:6px}
 .rowtop td{background:var(--accent-soft)}
+/* sticky first cell must stay OPAQUE on the highlighted row, or columns scroll
+   through it — composite the translucent tint over the solid card colour */
+.rowtop td:first-child{background:linear-gradient(var(--accent-soft),var(--accent-soft)),var(--card)}
 /* controls */
 .controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0 14px}
 select,input[type=search]{font:inherit;font-size:14px;padding:9px 12px;border-radius:12px;
