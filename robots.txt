@@ -3,3 +3,5 @@ Disallow: /cctv
 Disallow: /cctv/
 Disallow: /chunes-benchmarks
 Disallow: /chunes-benchmarks/
+Disallow: /nutrikit-benchmarks
+Disallow: /nutrikit-benchmarks/
